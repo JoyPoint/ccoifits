@@ -51,7 +51,7 @@ OIDataList OI_VIS2::read()
 	OIArrayPtr array = mParent->GetArray(this->GetArrayName());
 	OIWavelengthPtr wave = mParent->GetWavelength(this->GetInstrumentName());
 
-	for(int i = 0; i < n_rows-1; i++)
+	for(int i = 0; i < n_rows; i++)
 	{
 		OITargetPtr target = mParent->GetTarget(target_ids[i]);
 

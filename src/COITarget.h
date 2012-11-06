@@ -42,6 +42,8 @@ public:
 			double parallax, double parallax_err, string spec_type);
 
 	virtual ~COITarget();
+
+	int GetID() { return target_id; };
 };
 
 } /* namespace ccoifits */

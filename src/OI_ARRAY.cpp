@@ -58,11 +58,11 @@ vector<OIStationPtr> OI_ARRAY::ReadStations()
 	vector<string> sta_names = ReadColumn<string>("STA_NAME");
 	vector<int> sta_index = ReadColumn<int>("STA_INDEX");
 	vector<float> diameters = ReadColumn<float>("DIAMETER");
+	vector< valarray<double> > xyz = ReadArray<double>("STAXYZ");
 
 	for(int i = 0; i < n_rows; i++)
 	{
-		valarray<double> xyz = ReadCells<double>("STAXYZ", i);
-		OIStationPtr tmp( new COIStation(tel_names[i], sta_names[i], sta_index[i], diameters[i], xyz) );
+		OIStationPtr tmp( new COIStation(tel_names[i], sta_names[i], sta_index[i], diameters[i], xyz[i]) );
 		stations.push_back(tmp);
 	}
 
