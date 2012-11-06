@@ -37,8 +37,8 @@ protected:
 	auto_ptr<FITS> mOIFITS;
 
 	vector<OITargetPtr> mTargets;
-	map<string,OIArrayPtr> mArrays;	// maps mArray_map['name'] -> OIArrayPtr
-	vector<OIWavelengthPtr> mWaves;
+	map<string, OIArrayPtr> mArrays;	// maps mArray['name'] -> OIArrayPtr
+	map<string, OIWavelengthPtr> mWaves;	// maps mWaves['name'] -> OIWavelengthPtr
 
 public:
 	COIFile();

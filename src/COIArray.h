@@ -31,6 +31,8 @@ public:
 public:
 	COIArray(string array_name, string frame, vector<double> xyz, vector<OIStationPtr> stations);
 	virtual ~COIArray();
+
+	string GetName() { return array_name; };
 };
 
 } /* namespace ccoifits */
