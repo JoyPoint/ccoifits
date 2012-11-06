@@ -11,6 +11,7 @@
 #include <CCfits>
 #include <memory>
 #include <vector>
+#include <map>
 
 #include "COIDataRow.h"
 
@@ -36,7 +37,7 @@ protected:
 	auto_ptr<FITS> mOIFITS;
 
 	vector<OITargetPtr> mTargets;
-	vector<OIArrayPtr> mArrays;
+	map<string,OIArrayPtr> mArrays;	// maps mArray_map['name'] -> OIArrayPtr
 	vector<OIWavelengthPtr> mWaves;
 
 public:
