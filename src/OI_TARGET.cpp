@@ -55,12 +55,12 @@ OITargets OI_TARGET::read()
 		OITargetPtr tmp(new COITarget(target_ids[i], targets[i], RAs[i], DECs[i], equinoxes[i], RA_errs[i], DEC_errs[i],
 				RVs[i], rv_type[i], rv_def[i],
 				pm_ra[i], pm_dec[i], pm_ra_err[i], pm_dec_err[i],
-				parallax[i], parallax_err[i], spec_type[i]));
+				parallax[i], parallax_err[i], spec_type[i]) );
 
 		output.push_back(tmp);
 	}
 
-
+	return output;
 }
 
 } /* namespace ccoifits */
