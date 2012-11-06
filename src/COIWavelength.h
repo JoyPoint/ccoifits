@@ -8,6 +8,11 @@
 #ifndef COIWAVELENGTH_H_
 #define COIWAVELENGTH_H_
 
+#include <string>
+#include <vector>
+
+using namespace std;
+
 namespace ccoifits
 {
 

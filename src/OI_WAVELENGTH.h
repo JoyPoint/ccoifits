@@ -12,9 +12,10 @@
 
 using namespace std;
 
+#include "OI_TABLE.h"
+
 namespace ccoifits
 {
-#include "OI_TABLE.h"
 
 class COIWavelength;
 typedef shared_ptr<COIWavelength> OIWavelengthPtr;

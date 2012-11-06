@@ -12,6 +12,10 @@
 #include "COIArray.h"
 #include "OI_WAVELENGTH.h"
 #include "COIWavelength.h"
+#include "OI_DATA_TABLE.h"
+#include "COIDataRow.h"
+#include "OI_VIS2.h"
+#include "COIV2Row.h"
 
 namespace ccoifits
 {
@@ -32,6 +36,28 @@ void COIFile::close()
 
 }
 
+/// Returns an OIArrayPtr with the specified ID.  If no such target exists a placeholder
+/// is created and the corresponding OIArrayPtr is returned.
+OIArrayPtr COIFile::GetArray(string array_name)
+{
+	return mArrays[array_name];
+}
+
+/// Returns an OIWavelengthPtr with the specified ID.  If no such target exists a placeholder
+/// is created and the corresponding OIWavelengthPtr is returned.
+OIWavelengthPtr COIFile::GetWavelength(string wavelength_name)
+{
+	return mWaves[wavelength_name];
+}
+
+/// Returns an OITargetPtr with the specified ID.  If no such target exists a placeholder
+/// is created and the corresponding OITargetPtr is returned.
+OITargetPtr COIFile::GetTarget(int target_id)
+{
+	return mTargets[target_id];
+}
+
+/// Opens an OIFITS file.
 void COIFile::open(string filename, RWmode mode = Read)
 {
 	// Open the file
@@ -101,6 +127,27 @@ OIDataList COIFile::read()
 	// Now read in all OI_VIS, OI_VIS2, OI_T3 tables, associating the data with
 	// the corresponding shared pointers from above. Store the results of this
 	// operation in a vector<OIDataList> which we return from this function
+
+	// First all OI_VIS records:
+
+	// Second, OI_VIS2 records:
+	version = 0;
+	while(true)
+	{
+		try
+		{
+			table = &mOIFITS->extension("OI_VIS2", version);
+			OI_VIS2 oi_vis2 = OI_VIS2(*table, this);
+			OIDataList tmp = oi_vis2.read();
+			data.insert(data.end(), tmp.begin(), tmp.end());
+		}
+		catch(CCfits::FITS::NoSuchHDU)
+		{
+			break;
+		}
+		version++;
+	}
+
 
 
 	return data;

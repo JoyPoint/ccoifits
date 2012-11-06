@@ -60,12 +60,14 @@ public:
 	double mjd;
 	double int_time;
 
-
 	//vector<UVPtr> uv;
 	valarray<int> sta_index;
 	valarray<bool> flag;
 public:
-	COIDataRow(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength, int target_id, double time, double mjd, double int_time, valarray<int> sta_index, valarray<bool> flag);
+
+	COIDataRow(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength, double time, double mjd, double int_time, valarray<int> sta_index,
+			valarray<bool> flag);
+
 	virtual ~COIDataRow();
 
 	string GetArrayName();

@@ -5,12 +5,11 @@
  *      Author: bkloppen
  */
 
+#include "OI_WAVELENGTH.h"
+#include "COIWavelength.h"
 
 namespace ccoifits
 {
-
-#include "OI_WAVELENGTH.h"
-#include "COIWavelength.h"
 
 OI_WAVELENGTH::OI_WAVELENGTH(ExtHDU & table)
 : OI_TABLE(table)

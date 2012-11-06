@@ -46,6 +46,10 @@ public:
 
 	void close();
 
+	OIArrayPtr GetArray(string array_name);
+	OIWavelengthPtr GetWavelength(string wavelength_name);
+	OITargetPtr GetTarget(int target_id);
+
 	void open(string filename);
 	void open(string filename, CCfits::RWmode mode);
 
