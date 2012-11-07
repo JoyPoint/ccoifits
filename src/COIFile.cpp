@@ -134,6 +134,7 @@ OIDataList COIFile::read()
 		OI_VIS2 oi_vis2 = OI_VIS2(*table, this);
 		OIDataList tmp = oi_vis2.read();
 		data.insert(data.end(), tmp.begin(), tmp.end());
+		return data;
 	}
 
 	return data;
