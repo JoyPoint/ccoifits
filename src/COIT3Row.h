@@ -20,7 +20,8 @@ class COIT3Row: public COIDataRow
 {
 public:
 	COIT3Row(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength, double time, double mjd, double int_time, valarray<int> sta_index,
-			valarray<bool> flag, valarray<complex<double>> v2_data, valarray<complex<double>> v2_data_err);
+			valarray<bool> flag,
+			OIUVPtr uv12, OIUVPtr uv23, valarray<complex<double>> t3_data, valarray<complex<double>> t3_data_err);
 
 	virtual ~COIT3Row();
 

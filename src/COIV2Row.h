@@ -17,7 +17,7 @@ class COIV2Row: public COIDataRow
 {
 public:
 	COIV2Row(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength, double time, double mjd, double int_time, valarray<int> sta_index,
-			valarray<bool> flag, valarray<double> v2_data, valarray<double> v2_data_err);
+			valarray<bool> flag, OIUVPtr uv, valarray<double> v2_data, valarray<double> v2_data_err);
 
 	virtual ~COIV2Row();
 

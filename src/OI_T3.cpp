@@ -88,8 +88,10 @@ OIDataList OI_T3::read()
 	{
 		OITargetPtr target = mParent->GetTarget(target_ids[i]);
 
-		// TODO: UV Points!
-		OIDataRowPtr tmp( new COIT3Row(target, array, wave, times[i], MJDs[i], int_times[i], sta_indicies[i], flags[i], data[i], data_err[i]) );
+		OIUVPtr uv12( new COIUV(ucoord1[i], vcoord1[i]));
+		OIUVPtr uv23( new COIUV(ucoord2[i], vcoord2[i]));
+
+		OIDataRowPtr tmp( new COIT3Row(target, array, wave, times[i], MJDs[i], int_times[i], sta_indicies[i], flags[i], uv12, uv23, data[i], data_err[i]) );
 		output.push_back(tmp);
 	}
 

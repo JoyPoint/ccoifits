@@ -14,6 +14,7 @@
 #include <vector>
 #include <valarray>
 #include <memory>
+#include "COIUV.h"
 
 using namespace std;
 
@@ -60,7 +61,7 @@ public:
 	double mjd;
 	double int_time;
 
-	//vector<UVPtr> uv;
+	vector<OIUVPtr> mUV;
 	valarray<int> sta_index;
 	valarray<bool> flag;
 public:

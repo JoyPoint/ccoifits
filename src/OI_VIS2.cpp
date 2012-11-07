@@ -43,7 +43,6 @@ OIDataList OI_VIS2::read()
 	vector< valarray<double> > v2_data = ReadArray<double>("VIS2DATA");
 	vector< valarray<double> > v2_data_err = ReadArray<double>("VIS2ERR");
 
-	// TODO: UV Points!
 	vector<double> ucoord = ReadColumn<double>("UCOORD");
 	vector<double> vcoord = ReadColumn<double>("VCOORD");
 
@@ -57,9 +56,9 @@ OIDataList OI_VIS2::read()
 	{
 		OITargetPtr target = mParent->GetTarget(target_ids[i]);
 
-		// TODO: UV Points!
+		OIUVPtr uv( new COIUV(ucoord[i], vcoord[i]));
 
-		OIDataRowPtr tmp( new COIV2Row(target, array, wave, times[i], MJDs[i], int_times[i], sta_indicies[i], flags[i], v2_data[i], v2_data_err[i]) );
+		OIDataRowPtr tmp( new COIV2Row(target, array, wave, times[i], MJDs[i], int_times[i], sta_indicies[i], flags[i], uv, v2_data[i], v2_data_err[i]) );
 		output.push_back(tmp);
 	}
 
