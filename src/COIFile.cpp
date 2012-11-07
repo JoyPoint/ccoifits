@@ -16,6 +16,8 @@
 #include "COIDataRow.h"
 #include "OI_VIS2.h"
 #include "COIV2Row.h"
+#include "OI_T3.h"
+#include "COIT3Row.h"
 
 namespace ccoifits
 {
@@ -127,14 +129,22 @@ OIDataList COIFile::read()
 
 	// Second, OI_VIS2 records:
 	n_tables = ext.count("OI_VIS2");
-//	cout << "Found " << n_tables << " OI_VIS2 tables." << endl;
 	for(int i = 0; i < n_tables; i++)
 	{
 		table = &mOIFITS->extension("OI_VIS2", i+1);
 		OI_VIS2 oi_vis2 = OI_VIS2(*table, this);
 		OIDataList tmp = oi_vis2.read();
 		data.insert(data.end(), tmp.begin(), tmp.end());
-		return data;
+	}
+
+	// Lastly, OI_T3 records:
+	n_tables = ext.count("OI_T3");
+	for(int i = 0; i < n_tables; i++)
+	{
+		table = &mOIFITS->extension("OI_T3", i+1);
+		OI_T3 oi_t3 = OI_T3(*table, this);
+		OIDataList tmp = oi_t3.read();
+		data.insert(data.end(), tmp.begin(), tmp.end());
 	}
 
 	return data;
