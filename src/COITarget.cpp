@@ -6,6 +6,9 @@
  */
 
 #include "COITarget.h"
+#include <cmath>
+
+using namespace std;
 
 namespace ccoifits
 {
@@ -36,6 +39,16 @@ COITarget::COITarget(	int target_id, string target, double RA, double DEC, doubl
 COITarget::~COITarget()
 {
 	// TODO Auto-generated destructor stub
+}
+
+/// Returns the distance between this object and the specified coordinates
+/// computed in quadrature.
+double COITarget::DistanceTo(double ra, double dec)
+{
+	double d_ra = this->RA - ra;
+	double d_dec = this->DEC - dec;
+
+	return sqrt(d_ra*d_ra + d_dec*d_dec);
 }
 
 } /* namespace ccoifits */

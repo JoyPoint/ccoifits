@@ -43,6 +43,8 @@ public:
 
 	virtual ~COITarget();
 
+	double DistanceTo(double ra, double dec);
+
 	int GetID() { return target_id; };
 	string GetName() { return target; };
 };

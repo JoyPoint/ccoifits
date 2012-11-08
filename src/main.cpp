@@ -11,6 +11,7 @@
 #include <iostream>
 #include "main.h"
 #include "COIFile.h"
+#include "OIFilter.h"
 
 using namespace std;
 using namespace ccoifits;
@@ -29,6 +30,12 @@ int main(int argc, char *argv[])
 
 	OIDataList data = tmp.read();
 	cout << "Found " << data.size() << " data points." << endl;
+
+	OIDataList V2 = FilterByDataType(data, COIDataRow::OI_VIS2);
+	cout << "Found " << V2.size() << " V2s." << endl;
+
+	OIDataList T3 = FilterByDataType(data, COIDataRow::OI_T3);
+	cout << "Found " << T3.size() << " T3s." << endl;
 }
 
 #endif // MAIN_CPP_
