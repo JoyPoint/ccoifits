@@ -41,8 +41,8 @@ int main(int argc, char *argv[])
 
 	cout << "Distance to eps Aur: " << data[0]->DistanceTo(075.49221855, 43.82330720) << endl;
 
-	OICalibratorPtr old_cal = OICalibratorPtr( new CUniformDisk(0.4 * MAS_TO_RAD, 0.01 * MAS_TO_RAD) );
-	OICalibratorPtr new_cal = OICalibratorPtr( new CUniformDisk(0.5 * MAS_TO_RAD, 0.01 * MAS_TO_RAD) );
+	OICalibratorPtr old_cal = OICalibratorPtr( new CUniformDisk(0.4 * MAS_TO_RAD) );
+	OICalibratorPtr new_cal = OICalibratorPtr( new CUniformDisk(0.5 * MAS_TO_RAD) );
 	OIDataList recal = Recalibrate(data, old_cal, new_cal);
 }
 

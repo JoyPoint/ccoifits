@@ -18,7 +18,7 @@ class CUniformDisk: public COICalibrator
 protected:
 	double mDiameter; // stellar diameter, stored in radians.
 public:
-	CUniformDisk(double diameter, double error);
+	CUniformDisk(double diameter);
 	virtual ~CUniformDisk();
 
 	complex<double> GetVis(OIUVPtr uv, double wavelength);
