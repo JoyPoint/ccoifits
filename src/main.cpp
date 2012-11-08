@@ -36,6 +36,8 @@ int main(int argc, char *argv[])
 
 	OIDataList T3 = FilterByDataType(data, COIDataRow::OI_T3);
 	cout << "Found " << T3.size() << " T3s." << endl;
+
+	cout << "Distance to eps Aur: " << data[0]->DistanceTo(075.49221855, 43.82330720) << endl;
 }
 
 #endif // MAIN_CPP_

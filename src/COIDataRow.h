@@ -77,6 +77,8 @@ public:
 
 	double DistanceTo(double ra, double dec);
 
+	vector<double> GetEffectiveWavelengths();
+	vector<double> GetEffectiveBandwidths();
 	DataTypes GetType() { return mType; };
 };
 

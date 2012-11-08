@@ -55,6 +55,28 @@ string COIDataRow::GetCombinerName()
 	return "";
 }
 
+/// Returns the effective wavelengths of the data associated with this object. If there is no
+/// OI_WAVELENGTH table, an empty vector is returned.
+vector<double> COIDataRow::GetEffectiveWavelengths()
+{
+	if(mWave.get() != NULL)
+		return mWave->eff_wave;
+
+	vector<double> tmp;
+	return tmp;
+}
+
+/// Returns the effective bandwidths of the data associated with this object. If there is no
+/// OI_WAVELENGTH table, an empty vector is returned.
+vector<double> COIDataRow::GetEffectiveBandwidths()
+{
+	if(mWave.get() != NULL)
+		return mWave->eff_band;
+
+	vector<double> tmp;
+	return tmp;
+}
+
 /// Returns the name of the object as indicated by an OI_TARGET table, or an empty string.
 string COIDataRow::GetObjectName()
 {
