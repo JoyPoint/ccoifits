@@ -33,4 +33,34 @@ COIDataRow::~COIDataRow()
 	// TODO Auto-generated destructor stub
 }
 
+
+string COIDataRow::GetArrayName()
+{
+	if(mArray.get() != NULL)
+		return mArray->GetName();
+
+	return "";
+}
+
+string COIDataRow::GetCombinerName()
+{
+	if(mWave.get() != NULL)
+		return mWave->GetName();
+
+	return "";
+}
+
+string COIDataRow::GetObjectName()
+{
+	if(mTarget.get() != NULL)
+		return mTarget->GetName();
+
+	return "";
+}
+
+double COIDataRow::DistanceTo(double ra, double dec)
+{
+
+}
+
 } /* namespace ccoifits */

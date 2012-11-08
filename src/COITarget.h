@@ -44,6 +44,7 @@ public:
 	virtual ~COITarget();
 
 	int GetID() { return target_id; };
+	string GetName() { return target; };
 };
 
 } /* namespace ccoifits */
