@@ -56,7 +56,7 @@ OIWavelengthPtr COIFile::GetWavelength(string wavelength_name)
 /// is created and the corresponding OITargetPtr is returned.
 OITargetPtr COIFile::GetTarget(int target_id)
 {
-	return mTargets[target_id - 1];
+	return mTargets[target_id];
 }
 
 /// Opens an OIFITS file.
