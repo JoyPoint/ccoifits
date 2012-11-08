@@ -71,14 +71,15 @@ public:
 
 	virtual ~COIDataRow();
 
-	string GetArrayName();
-	string GetCombinerName();
-	string GetObjectName();
-
 	double DistanceTo(double ra, double dec);
 
+	string GetArrayName();
+	string GetCombinerName();
 	vector<double> GetEffectiveWavelengths();
 	vector<double> GetEffectiveBandwidths();
+	string GetObjectName();
+	unsigned int GetNData();
+	unsigned int GetNData_Raw();
 	DataTypes GetType() { return mType; };
 };
 

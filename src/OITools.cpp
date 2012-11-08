@@ -48,16 +48,8 @@ void Recalibrate_VIS2(OIDataRowPtr row, OICalibratorPtr old_cal, OICalibratorPtr
 	int n_wave =wavelength.size();
 
 	// Recalibrate using the ratio of the calibrators old/new:
-	cout << "Old V2: " << v2_row->v2_data[0] << " ";
-	cout << "old cal: " << old_cal->GetV2(uv, wavelength[0]) << " ";
-	cout << "new cal: " << new_cal->GetV2(uv, wavelength[0]) << " ";
-	double ratio;
 	for(int i = 0; i < n_wave; i++)
-	{
 		v2_row->v2_data[i] *= old_cal->GetV2(uv, wavelength[i]) / new_cal->GetV2(uv, wavelength[i]);
-	}
-
-	cout << " new V2: " << v2_row->v2_data[0] << endl;
 }
 
 /// Recalibrate a T3 row

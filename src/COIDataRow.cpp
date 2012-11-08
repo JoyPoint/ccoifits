@@ -37,6 +37,18 @@ COIDataRow::~COIDataRow()
 	// TODO Auto-generated destructor stub
 }
 
+/// Returns the distance between the object to which this data refers and the given coordinates.
+/// If this object is not associated with a target, positive infinity is returned.
+double COIDataRow::DistanceTo(double ra, double dec)
+{
+	if(mTarget.get() != NULL)
+	{
+		return mTarget->DistanceTo(ra, dec);
+	}
+
+	return std::numeric_limits<double>::max();
+}
+
 /// Returns the name of the array as indicated by the OI_ARRAY table, or an empty string.
 string COIDataRow::GetArrayName()
 {
@@ -77,6 +89,19 @@ vector<double> COIDataRow::GetEffectiveBandwidths()
 	return tmp;
 }
 
+/// Returns the total number of data points that are not masked by flags.
+unsigned int COIDataRow::GetNData()
+{
+	return GetNData_Raw() - flag.sum();
+}
+
+/// Returns the total number of data points contained in this object WITHOUT application
+/// of any flags. Answer is always = N(spectral channels)
+unsigned int COIDataRow::GetNData_Raw()
+{
+	return flag.size();
+}
+
 /// Returns the name of the object as indicated by an OI_TARGET table, or an empty string.
 string COIDataRow::GetObjectName()
 {
@@ -84,18 +109,6 @@ string COIDataRow::GetObjectName()
 		return mTarget->GetName();
 
 	return "";
-}
-
-/// Returns the distance between the object to which this data refers and the given coordinates.
-/// If this object is not associated with a target, positive infinity is returned.
-double COIDataRow::DistanceTo(double ra, double dec)
-{
-	if(mTarget.get() != NULL)
-	{
-		return mTarget->DistanceTo(ra, dec);
-	}
-
-	return std::numeric_limits<double>::max();
 }
 
 } /* namespace ccoifits */
