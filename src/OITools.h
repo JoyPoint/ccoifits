@@ -13,7 +13,7 @@
 
 using namespace std;
 
-class OICalibrator;
+class COICalibrator;
 
 namespace ccoifits
 {

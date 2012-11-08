@@ -12,6 +12,8 @@
 #include "main.h"
 #include "COIFile.h"
 #include "OIFilter.h"
+#include "OITools.h"
+#include "CUniformDisk.h"
 
 using namespace std;
 using namespace ccoifits;
@@ -38,6 +40,10 @@ int main(int argc, char *argv[])
 	cout << "Found " << T3.size() << " T3s." << endl;
 
 	cout << "Distance to eps Aur: " << data[0]->DistanceTo(075.49221855, 43.82330720) << endl;
+
+	OICalibratorPtr old_cal = OICalibratorPtr( new CUniformDisk(0.4 * MAS_TO_RAD, 0.01 * MAS_TO_RAD) );
+	OICalibratorPtr new_cal = OICalibratorPtr( new CUniformDisk(0.5 * MAS_TO_RAD, 0.01 * MAS_TO_RAD) );
+	OIDataList recal = Recalibrate(data, old_cal, new_cal);
 }
 
 #endif // MAIN_CPP_

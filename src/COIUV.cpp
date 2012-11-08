@@ -6,6 +6,9 @@
  */
 
 #include "COIUV.h"
+#include <cmath>
+
+using namespace std;
 
 namespace ccoifits
 {
@@ -31,6 +34,11 @@ COIUV::COIUV(double u, double v)
 COIUV::~COIUV()
 {
 	// TODO Auto-generated destructor stub
+}
+
+double COIUV::GetBaselineLength()
+{
+	return sqrt(u*u + v*v);
 }
 
 } /* namespace ccoifits */

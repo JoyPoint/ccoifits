@@ -33,6 +33,8 @@ public:
 	COIUV(double u, double v);
 	virtual ~COIUV();
 
+	double GetBaselineLength();
+
 	COIUV operator +(const COIUV & rhs)
 	{
 		return COIUV(this->u + rhs.u, this->v + rhs.v);
