@@ -17,4 +17,4 @@ add_library(ccoifits_shared SHARED ${CCOIFITS_SOURCE} ${CCFITS_LIBRARIES})
 target_link_libraries(ccoifits_shared ${CCFITS_LIBRARIES})
 
 add_executable(main ${MAIN_FILES})
-target_link_libraries(main ccoifits_shared)
+target_link_libraries(main ccoifits_shared ${CCFITS_LIBRARIES})
