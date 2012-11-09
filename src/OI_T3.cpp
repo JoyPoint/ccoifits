@@ -9,6 +9,10 @@
 #include "COIT3Row.h"
 #include "COIFile.h"
 
+#include <limits>
+
+using namespace std;
+
 namespace ccoifits
 {
 
@@ -53,17 +57,30 @@ OIDataList OI_T3::read()
 	if(n_rows > 0)	// This could be false if someone created a OI_T3 table with no data in it.
 		n_cols = t3_amp[0].size();
 
+	// Now copy the data into complex data fields
 	for(int i = 0; i < n_rows; i++)
 	{
 		// Create a new valarray to store the data values:
 		valarray< complex<double> > temp(n_cols);
 		valarray< complex<double> > temp_err(n_cols);
 
-		// Fill
+		// Fill in the data
 		for(int j = 0; j < n_cols; j++)
 		{
-			temp[j] = complex<double>(t3_amp[i][j], t3_phi[i][j]);
-			temp_err[j] = complex<double>(t3_amp_err[i][j], t3_phi_err[i][j]);
+			// If the phase has not been calibrated, the amplitude will be NULL.
+			// In this case, we still form the data products, but set the amplitude
+			// error to infinity.
+			if(isnan(t3_amp[j]))
+			{
+				temp[j] = complex<double>(1.0, t3_phi[i][j]);
+				temp_err[j] = complex<double>(numeric_limits<double>::max(), t3_phi_err[i][j]);
+
+			}
+			else
+			{
+				temp[j] = complex<double>(t3_amp[i][j], t3_phi[i][j]);
+				temp_err[j] = complex<double>(t3_amp_err[i][j], t3_phi_err[i][j]);
+			}
 		}
 
 		// Push them onto the vector.
@@ -71,7 +88,6 @@ OIDataList OI_T3::read()
 		data_err.push_back(temp_err);
 	}
 
-	// TODO: UV Points!
 	// Read in the UV points (UV 31 is implicitly defined)
 	vector<double> ucoord1 = ReadColumn<double>("U1COORD");
 	vector<double> vcoord1 = ReadColumn<double>("V1COORD");
