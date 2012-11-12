@@ -23,6 +23,10 @@ using namespace std;
 namespace ccoifits
 {
 
+void DirectExport(OIDataList & data, vector<pair<double,double> > & uv_points,
+		valarray<complex<double>> & vis, valarray<complex<double>> & vis_err,
+		valarray<double> & vis2, valarray<double> & vis2_err,
+		valarray<complex<double>> & t3, valarray<complex<double>> & t3_err);
 
 } /* namespace ccoifits */
 #endif /* OIEXPORT_H_ */
