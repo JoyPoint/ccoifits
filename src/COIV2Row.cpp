@@ -25,4 +25,27 @@ COIV2Row::~COIV2Row()
 	// TODO Auto-generated destructor stub
 }
 
+valarray<double> COIV2Row::GetMaskedData()
+{
+	return ApplyMask(flag, v2_data);
+}
+
+valarray<double> COIV2Row::GetMaskedDataError()
+{
+	return ApplyMask(flag, v2_data_err);
+}
+
+/// Returns the raw data stored in an COIV2Row without any application of a mask.
+valarray<double> COIV2Row::GetRawData()
+{
+	return v2_data;
+}
+
+/// Returns the raw data error stored in an COIV2Row without any application of a mask.
+valarray<double> COIV2Row::GetRawDataError()
+{
+	return v2_data_err;
+}
+
+
 } /* namespace ccoifits */

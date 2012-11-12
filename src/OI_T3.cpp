@@ -70,7 +70,7 @@ OIDataList OI_T3::read()
 			// If the phase has not been calibrated, the amplitude will be NULL.
 			// In this case, we still form the data products, but set the amplitude
 			// error to infinity.
-			if(isnan(t3_amp[j]))
+			if(std::isnan(t3_amp[i][j]))
 			{
 				temp[j] = complex<double>(1.0, t3_phi[i][j]);
 				temp_err[j] = complex<double>(numeric_limits<double>::max(), t3_phi_err[i][j]);

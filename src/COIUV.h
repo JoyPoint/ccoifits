@@ -16,8 +16,6 @@ using namespace std;
 namespace ccoifits
 {
 
-#define UV_THRESHOLD 5.0e-5
-
 class COIUV;
 typedef shared_ptr<COIUV> OIUVPtr;
 
@@ -34,6 +32,7 @@ public:
 	virtual ~COIUV();
 
 	double GetBaselineLength();
+	pair<double,double> GetScaledPair(double wavelength);
 
 	COIUV operator +(const COIUV & rhs)
 	{
@@ -45,16 +44,16 @@ public:
 		return COIUV(this->u - rhs.u, this->v - rhs.v);
 	}
 
-	bool operator ==(const COIUV & rhs)
-	{
-		double du = this->u - rhs.u;
-		double dv = this->v - rhs.v;
-
-		if(sqrt(du*du + dv*dv) < UV_THRESHOLD)
-			return true;
-
-		return false;
-	}
+//	bool operator ==(const COIUV & rhs)
+//	{
+//		double du = this->u - rhs.u;
+//		double dv = this->v - rhs.v;
+//
+//		if(sqrt(du*du + dv*dv) < UV_THRESHOLD)
+//			return true;
+//
+//		return false;
+//	}
 
 	template <typename T>
 	bool operator *(T val)

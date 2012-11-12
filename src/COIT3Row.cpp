@@ -33,4 +33,26 @@ COIT3Row::~COIT3Row()
 	// TODO Auto-generated destructor stub
 }
 
+valarray<complex<double>> COIT3Row::GetMaskedData()
+{
+	return ApplyMask(flag, t3_data);
+}
+
+valarray<complex<double>> COIT3Row::GetMaskedDataError()
+{
+	return ApplyMask(flag, t3_data_err);
+}
+
+/// Returns the raw data stored in an OIT3Row without any application of a mask.
+valarray<complex<double>> COIT3Row::GetRawData()
+{
+	return t3_data;
+}
+
+/// Returns the raw data error stored in an OIT3Row without any application of a mask.
+valarray<complex<double>> COIT3Row::GetRawDataError()
+{
+	return t3_data_err;
+}
+
 } /* namespace ccoifits */

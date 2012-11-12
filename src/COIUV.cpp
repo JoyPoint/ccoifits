@@ -41,4 +41,9 @@ double COIUV::GetBaselineLength()
 	return sqrt(u*u + v*v);
 }
 
+pair<double,double> COIUV::GetScaledPair(double wavelength)
+{
+	return pair<double,double>(u/wavelength, v/wavelength);
+}
+
 } /* namespace ccoifits */

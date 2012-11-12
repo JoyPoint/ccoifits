@@ -44,7 +44,7 @@ void Recalibrate_VIS2(OIDataRowPtr row, OICalibratorPtr old_cal, OICalibratorPtr
 
 	// Get the UV point and wavelength information:
 	OIUVPtr uv = v2_row->mUV[0];
-	vector<double> wavelength = v2_row->GetEffectiveWavelengths();
+	vector<double> wavelength = v2_row->GetRawWavelengths();
 	int n_wave =wavelength.size();
 
 	// Recalibrate using the ratio of the calibrators old/new:
@@ -66,8 +66,8 @@ void Recalibrate_T3(OIDataRowPtr row, OICalibratorPtr old_cal, OICalibratorPtr n
 	OIUVPtr uv_12 = t3_row->mUV[0];
 	OIUVPtr uv_23 = t3_row->mUV[1];
 	OIUVPtr uv_31 = t3_row->mUV[2];
-	vector<double> wavelength = t3_row->GetEffectiveWavelengths();
-	int n_wave =wavelength.size();
+	vector<double> wavelength = t3_row->GetRawWavelengths();
+	int n_wave = wavelength.size();
 
 	// Recalibrate using the ratio of the calibrators old/new:
 	for(int i = 0; i < n_wave; i++)

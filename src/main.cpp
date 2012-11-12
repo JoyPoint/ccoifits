@@ -44,6 +44,8 @@ int main(int argc, char *argv[])
 	OICalibratorPtr old_cal = OICalibratorPtr( new CUniformDisk(0.4 * MAS_TO_RAD) );
 	OICalibratorPtr new_cal = OICalibratorPtr( new CUniformDisk(0.5 * MAS_TO_RAD) );
 	OIDataList recal = Recalibrate(data, old_cal, new_cal);
+
+
 }
 
 #endif // MAIN_CPP_

@@ -67,9 +67,22 @@ string COIDataRow::GetCombinerName()
 	return "";
 }
 
+/// Returns the total number of data points that are not masked by flags.
+unsigned int COIDataRow::GetMaskedNData()
+{
+	return GetRawNData() - flag.sum();
+}
+
+/// Returns the total number of data points contained in this object WITHOUT application
+/// of any flags. Answer is always = N(spectral channels)
+unsigned int COIDataRow::GetRawNData()
+{
+	return flag.size();
+}
+
 /// Returns the effective wavelengths of the data associated with this object. If there is no
 /// OI_WAVELENGTH table, an empty vector is returned.
-vector<double> COIDataRow::GetEffectiveWavelengths()
+vector<double> COIDataRow::GetRawWavelengths()
 {
 	if(mWave.get() != NULL)
 		return mWave->eff_wave;
@@ -80,7 +93,7 @@ vector<double> COIDataRow::GetEffectiveWavelengths()
 
 /// Returns the effective bandwidths of the data associated with this object. If there is no
 /// OI_WAVELENGTH table, an empty vector is returned.
-vector<double> COIDataRow::GetEffectiveBandwidths()
+vector<double> COIDataRow::GetRawBandwidths()
 {
 	if(mWave.get() != NULL)
 		return mWave->eff_band;
@@ -89,18 +102,6 @@ vector<double> COIDataRow::GetEffectiveBandwidths()
 	return tmp;
 }
 
-/// Returns the total number of data points that are not masked by flags.
-unsigned int COIDataRow::GetNData()
-{
-	return GetNData_Raw() - flag.sum();
-}
-
-/// Returns the total number of data points contained in this object WITHOUT application
-/// of any flags. Answer is always = N(spectral channels)
-unsigned int COIDataRow::GetNData_Raw()
-{
-	return flag.size();
-}
 
 /// Returns the name of the object as indicated by an OI_TARGET table, or an empty string.
 string COIDataRow::GetObjectName()

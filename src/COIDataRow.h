@@ -5,7 +5,21 @@
  *      Author: bkloppen
  *
  *  A base class for holding most of a row in an OIFITS table. The only thing not
- *  included are the data and data errors.
+ *  included are the data and data errors as they do not have the same storage
+ *  format for different types of data.
+ *
+ *  Inheriting classes should implement the following functions:
+ *
+ * 		valarray<T> GetMaskedData();
+ * 		valarray<T> GetMaskedDataError();
+ * 		valarray<T> GetRawData();
+ * 		valarray<T> GetRawDataError();
+ *
+ *	but as these functions are not covariant, we cannot enforce this by inserting
+ *	virtual functions into the base class.  We could make this class into a template
+ *	but that, in turn, would prohibit us from making lists of shared_ptr<COIDataRow>.
+ *	Therefore we leave it up to the programmer to implement these functions.
+ *
  */
 
 #ifndef COIDATAROW_H_
@@ -14,6 +28,8 @@
 #include <vector>
 #include <valarray>
 #include <memory>
+#include <complex>
+#include <cassert>
 #include "COIUV.h"
 
 using namespace std;
@@ -64,6 +80,7 @@ public:
 	vector<OIUVPtr> mUV;
 	valarray<int> sta_index;
 	valarray<bool> flag;
+
 public:
 
 	COIDataRow(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength, double time, double mjd, double int_time, valarray<int> sta_index,
@@ -75,12 +92,45 @@ public:
 
 	string GetArrayName();
 	string GetCombinerName();
-	vector<double> GetEffectiveWavelengths();
-	vector<double> GetEffectiveBandwidths();
 	string GetObjectName();
-	unsigned int GetNData();
-	unsigned int GetNData_Raw();
+
+	// Functions for accessing the masked data:
+	unsigned int GetMaskedNData();
+	vector<double> GetMaskedWavelengths();
+	vector<double> GetMaskedBandwidths();
+
+	unsigned int GetRawNData();
+	vector<double> GetRawWavelengths();
+	vector<double> GetRawBandwidths();
+
 	DataTypes GetType() { return mType; };
+
+	/* Templated functions below here */
+
+	/// Applies the mask to the specified data. Both mask and data should be valarrays.
+	template <typename T>
+	T ApplyMask(valarray<bool> & mask, T data)
+	{
+		// Mask and data must have the same size.
+		assert(mask.size() == data.size());
+
+		// Determine how many elements are active in the mask and create a storage array
+		unsigned int n_true = mask.sum();
+		T output(n_true);
+
+		// iterate over the elements, i, of data
+		for(int i = 0, j = 0; i < mask.size(); i++)
+		{
+			// If the data is not masked, put it into the j-th slot of the output array
+			if(!mask[i])
+			{
+				output[j] = data[i];
+				j++;
+			}
+		}
+
+		return output;
+	}
 };
 
 }
