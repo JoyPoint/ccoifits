@@ -55,6 +55,13 @@ int main(int argc, char *argv[])
 
 	cout << ", Original post-recal: " << a->v2_data[0] << ", Recal: " << b->v2_data[0] << endl;
 
+	OIDataList boot_spec = Bootstrap_Spectral(data);
+	cout << "Trying spectral bootstrap. Pre N(rows): " << data.size() << " post: " << boot_spec.size() << endl;
+
+	OIDataList boot_rand = Bootstrap_Random(data);
+	cout << "Trying random bootstrap. Pre N(rows): " << data.size() << " post: " << boot_rand.size() << endl;
+
+	return 0;
 }
 
 #endif // MAIN_CPP_
