@@ -15,6 +15,8 @@
 #include "OITools.h"
 #include "CUniformDisk.h"
 
+#include "COIV2Row.h"
+
 using namespace std;
 using namespace ccoifits;
 
@@ -41,10 +43,17 @@ int main(int argc, char *argv[])
 
 	cout << "Distance to eps Aur: " << data[0]->DistanceTo(075.49221855, 43.82330720) << endl;
 
+	COIV2Row * a = reinterpret_cast<COIV2Row *>(data[0].get());
+	cout << "Original: " << a->v2_data[0];
+
 	OICalibratorPtr old_cal = OICalibratorPtr( new CUniformDisk(0.4 * MAS_TO_RAD) );
 	OICalibratorPtr new_cal = OICalibratorPtr( new CUniformDisk(0.5 * MAS_TO_RAD) );
 	OIDataList recal = Recalibrate(data, old_cal, new_cal);
 
+	a = reinterpret_cast<COIV2Row *>(data[0].get());
+	COIV2Row * b = reinterpret_cast<COIV2Row *>(recal[0].get());
+
+	cout << ", Original post-recal: " << a->v2_data[0] << ", Recal: " << b->v2_data[0] << endl;
 
 }
 

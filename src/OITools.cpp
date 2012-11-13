@@ -7,8 +7,8 @@
 
 #include "OITools.h"
 #include "OIFilter.h"
-#include "COIDataRow.h"
 #include "COIWavelength.h"
+#include "COIDataRow.h"
 #include "COIV2Row.h"
 #include "COIT3Row.h"
 #include "COICalibrator.h"
@@ -22,76 +22,121 @@ namespace ccoifits
 
 /// Creates a data set suitable for bootstrapping by randomly selecting Vis, V2, and T3 data
 /// from the original set.  The total number of each of Vis, V2, and T3 is maintained.
-OIDataList Bootstrap_Random(const OIDataList & data)
-{
-
-
-
-
-	return OIDataList();
-}
+///
+/// Data for which the flag is set will never be included in the bootstrapping.
+//OIDataList Bootstrap_Random(const OIDataList & data)
+//{
+//	// Init the output and random number generator:
+//	OIDataList output;
+//
+//	OIDataList temp = FilterByDataType(data, COIDataRow::OI_VIS);
+//	Bootstrap_Random_Helper(temp, output);
+//
+//	temp = FilterByDataType(data, COIDataRow::OI_VIS2);
+//	Bootstrap_Random_Helper(temp, output);
+//
+//	temp = FilterByDataType(data, COIDataRow::OI_T3);
+//	Bootstrap_Random_Helper(temp, output);
+//
+//	return output;
+//}
+//
+///// Function that does the random bootstrapping on data subtypes.
+//void Bootstrap_Random_Helper(const OIDataList & input, OIDataList & output)
+//{
+//	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+//	std::default_random_engine generator (seed);
+//	std::uniform_int_distribution<int> row_dist(0, temp.size() - 1);
+//
+//	unsigned int n_data = CountActiveData(input);
+//
+//	while(n_data > 0)
+//	{
+//		// Pick a row at random.  Copy it into a new object.
+//		OIDataList row = input[ row_dist(generator) ];
+//
+//		// How many data shall we flag?
+//
+//		std::uniform_int_distribution<int> flag_dist(0, row->GetMaskedNData());
+//		int n_to_flag = flag_dist(generator);
+//
+//		// Pick a number of data points to mask off at random
+//		int mask_n = min(n_data, n_to_flag);
+//
+//		row->RandomMask( min(n_data, n_to_flag) );
+//		output.push_back(row);
+//		n_data -= row->GetMaskedNData();
+//	}
+//}
 
 /// Creates a data set suitable for bootstrapping by selecting Vis, V2, and T3 data in
-/// spectrally dispersed chunks.
+/// spectrally dispersed chunks. Returns a copy of underlying objects.
 ///
 /// The total number of each Vis, V2, and T3 are maintained.
 OIDataList Bootstrap_Spectral(const OIDataList & data)
 {
-	// Init the output and random number generator:
 	OIDataList output;
+
+	OIDataList temp = FilterByDataType(data, COIDataRow::OI_VIS);
+	Bootstrap_Spectral_Helper(temp, output);
+
+	temp = FilterByDataType(data, COIDataRow::OI_VIS2);
+	Bootstrap_Spectral_Helper(temp, output);
+
+	temp = FilterByDataType(data, COIDataRow::OI_T3);
+	Bootstrap_Spectral_Helper(temp, output);
+
+	return output;
+}
+
+void Bootstrap_Spectral_Helper(const OIDataList & input, OIDataList & output)
+{
+	// Init a random number generator:
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine generator (seed);
 
-	// First do the Visibility data.  Find all of the OI_VIS data:
-	OIDataList temp = FilterByDataType(data, COIDataRow::OI_VIS);
 	// Generate a random distribution of the same size as the number of OI_VIS records
-	std::uniform_int_distribution<int> vis_dist(0, temp.size() - 1);
+	std::uniform_int_distribution<int> data_dist(0, input.size() - 1);
 	// Find out the total number of active data points
-	unsigned int n_data = CountActiveData(temp);
+	unsigned int n_data = CountActiveData(input);
 	while(n_data > 0)
 	{
 		// Include entire spectral groups by randomly including data.
-		auto row = temp[ vis_dist(generator) ];
-		output.push_back(row);
+		// Be sure to copy it
+		auto row = input[ data_dist(generator) ];
+		output.push_back(copy(row));
 		n_data -= row->GetMaskedNData();
 	}
 
-	// We may have included too many points, if so, simply mask out a few
-	// points on the last included set.
+	// Ensure that we do not include more data than the original set.
+	// If we did, mask off the remainder randomly from the last appended data row.
 	if(n_data < 0)
 		output[output.size() - 1]->RandomMask(abs(n_data));
+}
 
-	/* Repeat the same thing for V2 and T3 data */
+// Performs a deep copy of an OIDataList
+OIDataList copy(const OIDataList & data)
+{
+	OIDataList output;
+	for(auto row: data)
+		output.push_back(copy(row));
 
-	//V2 records
-	temp = FilterByDataType(data, COIDataRow::OI_VIS2);
-	std::uniform_int_distribution<int> v2_dist(0, temp.size() - 1);
-	n_data = CountActiveData(temp);
-	while(n_data > 0)
-	{
-		auto row = temp[ v2_dist(generator) ];
-		output.push_back(row);
-		n_data -= row->GetMaskedNData();
-	}
+	return output;
+}
 
-	if(n_data < 0)
-		output[output.size() - 1]->RandomMask(abs(n_data));
+/// Performs a deep copy of an OIDataRowPtr
+OIDataRowPtr copy(const OIDataRowPtr & row)
+{
+	// TODO: Implement copy method for OI_VIS objects:
+	OIDataRowPtr output;
 
-	// T3s records
-	temp = FilterByDataType(data, COIDataRow::OI_T3);
-	std::uniform_int_distribution<int> t3_dist(0, temp.size() - 1);
-	n_data = CountActiveData(temp);
-	while(n_data > 0)
-	{
-		auto row = temp[ t3_dist(generator) ];
-		output.push_back(row);
-		n_data -= row->GetMaskedNData();
-	}
+//	if(row->GetType() == COIDataRow::OI_VIS)
+//		return OIDataRowPtr( new COIVis(row->get()));
+	if(row->GetType() == COIDataRow::OI_VIS2)
+		output.reset( new COIV2Row( dynamic_cast<COIV2Row*>(row.get()) ) );
+	else if(row->GetType() == COIDataRow::OI_T3)
+		output.reset( new COIT3Row( dynamic_cast<COIT3Row*>(row.get()) ) );
 
-	if(n_data < 0)
-		output[output.size() - 1]->RandomMask(abs(n_data));
-
-	// Return the result.
 	return output;
 }
 
@@ -107,51 +152,52 @@ unsigned int CountActiveData(const OIDataList & data)
 
 
 /// Performs a pseudo re-calibration on the data, returning a copy of the newly calibrated data
-OIDataList Recalibrate(OIDataList data, OICalibratorPtr old_cal, OICalibratorPtr new_cal)
+/// The original data are left unmodified.
+OIDataList Recalibrate(const OIDataList & data, OICalibratorPtr old_cal, OICalibratorPtr new_cal)
 {
-	// Notice we are passing by value, so we have a COPY of the original OIDataList.
-	// We can safely modify its content without issues.
-	for(OIDataRowPtr row: data)
+	// Make a deep copy of the data
+	OIDataList tmp = copy(data);
+	COIV2Row * v2_row;
+	COIT3Row * t3_row;
+
+	// Now recalibrate.  Use RTTI to decide which function we should call.
+	for(OIDataRowPtr row: tmp)
 	{
-		if(row->GetType() == COIDataRow::OI_VIS2)
-			Recalibrate_VIS2(row, old_cal, new_cal);
-		else if(row->GetType() == COIDataRow::OI_T3)
-			Recalibrate_T3(row, old_cal, new_cal);
+		v2_row = dynamic_cast<COIV2Row*>(row.get());
+		if(v2_row != NULL)
+			Recalibrate(v2_row, old_cal, new_cal);
+
+		t3_row = dynamic_cast<COIT3Row*>(row.get());
+		if(t3_row != NULL)
+			Recalibrate(t3_row, old_cal, new_cal);
+
+//		else if(row->GetType() == COIDataRow::OI_T3)
+//			Recalibrate_T3(row, old_cal, new_cal);
 	}
 
-	return data;
+	return tmp;
 }
 
 /// Recalibrate a VIS2 row
-void Recalibrate_VIS2(OIDataRowPtr row, OICalibratorPtr old_cal, OICalibratorPtr new_cal)
+void Recalibrate(COIV2Row * v2_row, OICalibratorPtr old_cal, OICalibratorPtr new_cal)
 {
-	// Verify we truly have an OI_VIS2 record, if not, do nothing.
-	if(row->GetType() != COIDataRow::OI_VIS2)
-		return;
-
-	// We have an OI_VIS2 object, dynamic cast it as so:
-	COIV2Row * v2_row = dynamic_cast<COIV2Row*>(row.get());
-
 	// Get the UV point and wavelength information:
 	OIUVPtr uv = v2_row->mUV[0];
 	vector<double> wavelength = v2_row->GetRawWavelengths();
-	int n_wave =wavelength.size();
+	int n_wave = wavelength.size();
 
 	// Recalibrate using the ratio of the calibrators old/new:
 	for(int i = 0; i < n_wave; i++)
-		v2_row->v2_data[i] *= old_cal->GetV2(uv, wavelength[i]) / new_cal->GetV2(uv, wavelength[i]);
+	{
+		double temp = v2_row->v2_data[i];
+		temp *= old_cal->GetV2(uv, wavelength[i]) / new_cal->GetV2(uv, wavelength[i]);
+		v2_row->v2_data[i] = temp;
+	}
 }
 
 /// Recalibrate a T3 row
-void Recalibrate_T3(OIDataRowPtr row, OICalibratorPtr old_cal, OICalibratorPtr new_cal)
+void Recalibrate(COIT3Row * t3_row, OICalibratorPtr old_cal, OICalibratorPtr new_cal)
 {
-	// Verify we truly have an OI_VIS2 record, if not, do nothing.
-	if(row->GetType() != COIDataRow::OI_T3)
-		return;
-
-	// We have an OI_VIS2 object, dynamic cast it as so:
-	COIT3Row * t3_row = dynamic_cast<COIT3Row*>(row.get());
-
 	// Get the UV point and wavelength information:
 	OIUVPtr uv_12 = t3_row->mUV[0];
 	OIUVPtr uv_23 = t3_row->mUV[1];
