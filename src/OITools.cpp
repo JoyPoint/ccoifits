@@ -24,7 +24,7 @@ namespace ccoifits
 {
 
 /// Creates a data set suitable for bootstrapping by randomly selecting Vis, V2, and T3 data
-/// from the original set.  The total number of each of Vis, V2, and T3 is maintained.
+/// from the original set.  The total number of each of Vis, V2, and T3 is conserved.
 /// As flags are modified, this function returns a copy of the underlying data structures.
 OIDataList Bootstrap_Random(const OIDataList & data)
 {
@@ -53,8 +53,7 @@ void Bootstrap_Random_Helper(const OIDataList & input, OIDataList & output)
 	std::default_random_engine generator (seed);
 	std::uniform_int_distribution<int> row_dist(0, input.size() - 1);
 
-	unsigned int n_data = CountActiveData(input);
-
+	int n_data = CountActiveData(input);
 	while(n_data > 0)
 	{
 		// Pick a row at random.  Be sure to copy it so that we don't modify the original data.
@@ -74,7 +73,7 @@ void Bootstrap_Random_Helper(const OIDataList & input, OIDataList & output)
 /// Creates a data set suitable for bootstrapping by selecting Vis, V2, and T3 data in
 /// spectrally dispersed chunks. Returns a copy of underlying objects.
 ///
-/// The total number of each Vis, V2, and T3 are maintained.
+/// The total number of each of Vis, V2, and T3 are conserved.
 OIDataList Bootstrap_Spectral(const OIDataList & data)
 {
 	OIDataList output;
@@ -100,7 +99,7 @@ void Bootstrap_Spectral_Helper(const OIDataList & input, OIDataList & output)
 	// Generate a random distribution of the same size as the number of OI_VIS records
 	std::uniform_int_distribution<int> data_dist(0, input.size() - 1);
 	// Find out the total number of active data points
-	unsigned int n_data = CountActiveData(input);
+	int n_data = CountActiveData(input);
 	while(n_data > 0)
 	{
 		// Include entire spectral groups by randomly including data.
@@ -190,11 +189,7 @@ void Recalibrate(COIV2Row * v2_row, OICalibratorPtr old_cal, OICalibratorPtr new
 
 	// Recalibrate using the ratio of the calibrators old/new:
 	for(int i = 0; i < n_wave; i++)
-	{
-		double temp = v2_row->v2_data[i];
-		temp *= old_cal->GetV2(uv, wavelength[i]) / new_cal->GetV2(uv, wavelength[i]);
-		v2_row->v2_data[i] = temp;
-	}
+		v2_row->v2_data[i] *= old_cal->GetV2(uv, wavelength[i]) / new_cal->GetV2(uv, wavelength[i]);
 }
 
 /// Recalibrate a T3 row
