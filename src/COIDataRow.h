@@ -109,6 +109,8 @@ public:
 
 	DataTypes GetType() { return mType; };
 
+	void RandomMask(unsigned int n_to_flag);
+
 	/* Templated functions below here */
 
 	/// Applies the mask to the specified data. Both mask and data should be valarrays.

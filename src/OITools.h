@@ -27,6 +27,7 @@ class COIDataRow;
 typedef shared_ptr<COIDataRow> OIDataRowPtr;
 
 OIDataList Bootstrap_Random(const OIDataList & data);
+void Bootstrap_Random_Helper(const OIDataList & input, OIDataList & output);
 
 OIDataList Bootstrap_Spectral(const OIDataList & data);
 void Bootstrap_Spectral_Helper(const OIDataList & input, OIDataList & output);

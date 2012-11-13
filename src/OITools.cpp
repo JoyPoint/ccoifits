@@ -6,6 +6,12 @@
  */
 
 #include "OITools.h"
+
+#include <random>
+#include <chrono>
+#include <cmath>
+using namespace std;
+
 #include "OIFilter.h"
 #include "COIWavelength.h"
 #include "COIDataRow.h"
@@ -13,61 +19,57 @@
 #include "COIT3Row.h"
 #include "COICalibrator.h"
 
-#include <random>
-#include <chrono>
-using namespace std;
 
 namespace ccoifits
 {
 
 /// Creates a data set suitable for bootstrapping by randomly selecting Vis, V2, and T3 data
 /// from the original set.  The total number of each of Vis, V2, and T3 is maintained.
-///
-/// Data for which the flag is set will never be included in the bootstrapping.
-//OIDataList Bootstrap_Random(const OIDataList & data)
-//{
-//	// Init the output and random number generator:
-//	OIDataList output;
-//
-//	OIDataList temp = FilterByDataType(data, COIDataRow::OI_VIS);
-//	Bootstrap_Random_Helper(temp, output);
-//
-//	temp = FilterByDataType(data, COIDataRow::OI_VIS2);
-//	Bootstrap_Random_Helper(temp, output);
-//
-//	temp = FilterByDataType(data, COIDataRow::OI_T3);
-//	Bootstrap_Random_Helper(temp, output);
-//
-//	return output;
-//}
-//
-///// Function that does the random bootstrapping on data subtypes.
-//void Bootstrap_Random_Helper(const OIDataList & input, OIDataList & output)
-//{
-//	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-//	std::default_random_engine generator (seed);
-//	std::uniform_int_distribution<int> row_dist(0, temp.size() - 1);
-//
-//	unsigned int n_data = CountActiveData(input);
-//
-//	while(n_data > 0)
-//	{
-//		// Pick a row at random.  Copy it into a new object.
-//		OIDataList row = input[ row_dist(generator) ];
-//
-//		// How many data shall we flag?
-//
-//		std::uniform_int_distribution<int> flag_dist(0, row->GetMaskedNData());
-//		int n_to_flag = flag_dist(generator);
-//
-//		// Pick a number of data points to mask off at random
-//		int mask_n = min(n_data, n_to_flag);
-//
-//		row->RandomMask( min(n_data, n_to_flag) );
-//		output.push_back(row);
-//		n_data -= row->GetMaskedNData();
-//	}
-//}
+/// As flags are modified, this function returns a copy of the underlying data structures.
+OIDataList Bootstrap_Random(const OIDataList & data)
+{
+	// Init the output and random number generator:
+	OIDataList output;
+
+	OIDataList temp = FilterByDataType(data, COIDataRow::OI_VIS);
+	Bootstrap_Random_Helper(temp, output);
+
+	temp = FilterByDataType(data, COIDataRow::OI_VIS2);
+	Bootstrap_Random_Helper(temp, output);
+
+	temp = FilterByDataType(data, COIDataRow::OI_T3);
+	Bootstrap_Random_Helper(temp, output);
+
+	return output;
+}
+
+/// Function that does the random bootstrapping on data subtypes.
+void Bootstrap_Random_Helper(const OIDataList & input, OIDataList & output)
+{
+	// local vars:
+	int n_to_flag = 0;
+
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::default_random_engine generator (seed);
+	std::uniform_int_distribution<int> row_dist(0, input.size() - 1);
+
+	unsigned int n_data = CountActiveData(input);
+
+	while(n_data > 0)
+	{
+		// Pick a row at random.  Be sure to copy it so that we don't modify the original data.
+		OIDataRowPtr row = copy(input[ row_dist(generator) ]);
+
+		// How many data shall we flag? Don't flag more data than remainig in n_data.
+		std::uniform_int_distribution<int> flag_dist(0, row->GetMaskedNData() - 1);
+		n_to_flag = fmin(n_data, flag_dist(generator));
+
+		// Apply the mask.
+		row->RandomMask(n_to_flag);
+		output.push_back(row);
+		n_data -= row->GetMaskedNData();
+	}
+}
 
 /// Creates a data set suitable for bootstrapping by selecting Vis, V2, and T3 data in
 /// spectrally dispersed chunks. Returns a copy of underlying objects.
@@ -102,9 +104,9 @@ void Bootstrap_Spectral_Helper(const OIDataList & input, OIDataList & output)
 	while(n_data > 0)
 	{
 		// Include entire spectral groups by randomly including data.
-		// Be sure to copy it
-		auto row = input[ data_dist(generator) ];
-		output.push_back(copy(row));
+		// Be sure to copy it so we don't accidently modify the original data.
+		auto row = copy(input[ data_dist(generator) ]);
+		output.push_back(row);
 		n_data -= row->GetMaskedNData();
 	}
 

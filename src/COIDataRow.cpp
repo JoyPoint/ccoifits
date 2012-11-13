@@ -6,6 +6,8 @@
  */
 
 #include <limits>
+#include <random>
+#include <chrono>
 
 #include "COIDataRow.h"
 #include "COITarget.h"
@@ -138,6 +140,31 @@ string COIDataRow::GetObjectName()
 		return mTarget->GetName();
 
 	return "";
+}
+
+/// Sets n_to_flag flags at random.
+void COIDataRow::RandomMask(unsigned int n_to_flag)
+{
+	// The number of flags to set must always be less than the number of unflagged parameters.
+	assert(n_to_flag < GetMaskedNData());
+
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::default_random_engine generator (seed);
+	std::uniform_int_distribution<int> flag_dist(0, flag.size() - 1);
+	unsigned int entry = 0;
+
+	// flag n_to_flag data points at random.
+	while(n_to_flag > 0)
+	{
+		// Pick a flag at random
+		entry = flag_dist(generator);
+
+		if(!flag[entry])
+		{
+			flag[entry] = true;
+			n_to_flag--;
+		}
+	}
 }
 
 } /* namespace ccoifits */
