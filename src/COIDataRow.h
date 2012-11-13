@@ -40,6 +40,9 @@ namespace ccoifits
 class OI_DATA_TABLE;
 typedef shared_ptr<OI_DATA_TABLE> DataTablePtr;
 
+// Note: One must be careful with the OIDataList. It is a vector of shared_ptrs, therefore
+// a copy simply increments the reference count on the underlying object.
+
 class COIDataRow;
 typedef shared_ptr<COIDataRow> OIDataRowPtr;
 typedef vector<OIDataRowPtr> OIDataList;
@@ -85,6 +88,8 @@ public:
 
 	COIDataRow(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength, double time, double mjd, double int_time, valarray<int> sta_index,
 			valarray<bool> flag);
+
+	COIDataRow(const COIDataRow * other);
 
 	virtual ~COIDataRow();
 

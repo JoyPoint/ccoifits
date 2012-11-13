@@ -20,6 +20,15 @@ COIV2Row::COIV2Row(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelen
 	mUV.push_back(uv);
 }
 
+COIV2Row::COIV2Row(COIV2Row * other)
+	:COIDataRow(other)
+{
+	mType = DataTypes::OI_VIS2;
+	v2_data = other->v2_data;
+	v2_data_err = other->v2_data_err;
+	mUV = other->mUV;
+}
+
 COIV2Row::~COIV2Row()
 {
 	// TODO Auto-generated destructor stub

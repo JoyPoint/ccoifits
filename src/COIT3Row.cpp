@@ -28,6 +28,15 @@ COIT3Row::COIT3Row(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelen
 	mUV.push_back(uv31);
 }
 
+COIT3Row::COIT3Row(COIT3Row * other)
+: COIDataRow(other)
+{
+	mType = DataTypes::OI_T3;
+	t3_data = other->t3_data;
+	t3_data_err = other->t3_data_err;
+	mUV = other->mUV;
+}
+
 COIT3Row::~COIT3Row()
 {
 	// TODO Auto-generated destructor stub

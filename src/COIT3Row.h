@@ -27,6 +27,7 @@ public:
 			valarray<bool> flag,
 			OIUVPtr uv12, OIUVPtr uv23, valarray<complex<double>> t3_data, valarray<complex<double>> t3_data_err);
 
+	COIT3Row(COIT3Row * other);
 	virtual ~COIT3Row();
 
 	valarray<complex<double>> GetMaskedData();

@@ -28,8 +28,17 @@ COIDataRow::COIDataRow(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wav
 	this->int_time = int_time;
 	this->sta_index = sta_index;
 	this->flag = flag;
+}
 
-
+COIDataRow::COIDataRow(const COIDataRow * other)
+{
+	mTarget = other->mTarget;
+	mArray = other->mArray;
+	this->time = other->time;
+	this->mjd = other->mjd;
+	this->int_time = other->int_time;
+	this->sta_index = other->sta_index;
+	this->flag = other->flag;
 }
 
 COIDataRow::~COIDataRow()
