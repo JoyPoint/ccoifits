@@ -75,7 +75,6 @@ protected:
 	OIWavelengthPtr mWave;
 
 public:
-	int target_id;
 	double time;
 	double mjd;
 	double int_time;

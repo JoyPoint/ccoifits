@@ -34,6 +34,7 @@ COIDataRow::COIDataRow(const COIDataRow * other)
 {
 	mTarget = other->mTarget;
 	mArray = other->mArray;
+	mWave = other->mWave;
 	this->time = other->time;
 	this->mjd = other->mjd;
 	this->int_time = other->int_time;
