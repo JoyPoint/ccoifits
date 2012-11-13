@@ -13,13 +13,103 @@
 #include "COIT3Row.h"
 #include "COICalibrator.h"
 
+#include <random>
+#include <chrono>
+using namespace std;
+
 namespace ccoifits
 {
+
+/// Creates a data set suitable for bootstrapping by randomly selecting Vis, V2, and T3 data
+/// from the original set.  The total number of each of Vis, V2, and T3 is maintained.
+OIDataList Bootstrap_Random(const OIDataList & data)
+{
+
+
+
+
+	return OIDataList();
+}
+
+/// Creates a data set suitable for bootstrapping by selecting Vis, V2, and T3 data in
+/// spectrally dispersed chunks.
+///
+/// The total number of each Vis, V2, and T3 are maintained.
+OIDataList Bootstrap_Spectral(const OIDataList & data)
+{
+	// Init the output and random number generator:
+	OIDataList output;
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::default_random_engine generator (seed);
+
+	// First do the Visibility data.  Find all of the OI_VIS data:
+	OIDataList temp = FilterByDataType(data, COIDataRow::OI_VIS);
+	// Generate a random distribution of the same size as the number of OI_VIS records
+	std::uniform_int_distribution<int> vis_dist(0, temp.size() - 1);
+	// Find out the total number of active data points
+	unsigned int n_data = CountActiveData(temp);
+	while(n_data > 0)
+	{
+		// Include entire spectral groups by randomly including data.
+		auto row = temp[ vis_dist(generator) ];
+		output.push_back(row);
+		n_data -= row->GetMaskedNData();
+	}
+
+	// We may have included too many points, if so, simply mask out a few
+	// points on the last included set.
+	if(n_data < 0)
+		output[output.size() - 1]->RandomMask(abs(n_data));
+
+	/* Repeat the same thing for V2 and T3 data */
+
+	//V2 records
+	temp = FilterByDataType(data, COIDataRow::OI_VIS2);
+	std::uniform_int_distribution<int> v2_dist(0, temp.size() - 1);
+	n_data = CountActiveData(temp);
+	while(n_data > 0)
+	{
+		auto row = temp[ v2_dist(generator) ];
+		output.push_back(row);
+		n_data -= row->GetMaskedNData();
+	}
+
+	if(n_data < 0)
+		output[output.size() - 1]->RandomMask(abs(n_data));
+
+	// T3s records
+	temp = FilterByDataType(data, COIDataRow::OI_T3);
+	std::uniform_int_distribution<int> t3_dist(0, temp.size() - 1);
+	n_data = CountActiveData(temp);
+	while(n_data > 0)
+	{
+		auto row = temp[ t3_dist(generator) ];
+		output.push_back(row);
+		n_data -= row->GetMaskedNData();
+	}
+
+	if(n_data < 0)
+		output[output.size() - 1]->RandomMask(abs(n_data));
+
+	// Return the result.
+	return output;
+}
+
+/// Counts the total number of data points that are not masked out (i.e. active data)
+unsigned int CountActiveData(const OIDataList & data)
+{
+	int n_data = 0;
+	for(auto row : data)
+		n_data += row->GetMaskedNData();
+
+	return n_data;
+}
+
 
 /// Performs a pseudo re-calibration on the data, returning a copy of the newly calibrated data
 OIDataList Recalibrate(OIDataList data, OICalibratorPtr old_cal, OICalibratorPtr new_cal)
 {
-	// Notice we are passing by value, so we have a COPY of the original vector.
+	// Notice we are passing by value, so we have a COPY of the original OIDataList.
 	// We can safely modify its content without issues.
 	for(OIDataRowPtr row: data)
 	{

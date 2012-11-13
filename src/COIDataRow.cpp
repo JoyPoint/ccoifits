@@ -73,6 +73,24 @@ unsigned int COIDataRow::GetMaskedNData()
 	return GetRawNData() - flag.sum();
 }
 
+vector<double> COIDataRow::GetMaskedWavelengths()
+{
+	if(mWave.get() != NULL)
+		return ApplyMask(flag, mWave->eff_wave);
+
+	vector<double> tmp;
+	return tmp;
+}
+
+vector<double> COIDataRow::GetMaskedBandwidths()
+{
+	if(mWave.get() != NULL)
+		return ApplyMask(flag, mWave->eff_band);
+
+	vector<double> tmp;
+	return tmp;
+}
+
 /// Returns the total number of data points contained in this object WITHOUT application
 /// of any flags. Answer is always = N(spectral channels)
 unsigned int COIDataRow::GetRawNData()
