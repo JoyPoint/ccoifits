@@ -34,6 +34,8 @@ public:
 	double GetBaselineLength();
 	pair<double,double> GetScaledPair(double wavelength);
 
+	static int compare_uv(const pair<double,double> & uv1, const pair<double,double> & uv2);
+
 	COIUV operator +(const COIUV & rhs)
 	{
 		return COIUV(this->u + rhs.u, this->v + rhs.v);
