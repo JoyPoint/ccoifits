@@ -23,6 +23,22 @@ using namespace std;
 namespace ccoifits
 {
 
+/// Computes the average MJD in the specified OIDataList.
+double AverageMJD(const OIDataList & data)
+{
+	// TODO: Doing it this way probably introduces an overflow bug.  There is a way to
+	// avoid it, but I don't recall what it is at this moment.
+
+	long double ave_mjd = 0;
+	for(auto row: data)
+		ave_mjd += row->mjd;
+
+	if(data.size() > 0)
+		return ave_mjd / data.size();
+
+	return -1;
+}
+
 /// Creates a data set suitable for bootstrapping by randomly selecting Vis, V2, and T3 data
 /// from the original set.  The total number of each of Vis, V2, and T3 is conserved.
 /// As flags are modified, this function returns a copy of the underlying data structures.

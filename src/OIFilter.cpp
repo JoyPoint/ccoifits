@@ -11,7 +11,7 @@ namespace ccoifits
 {
 
 /// Returns a vector of OIDataPtr whose array matches array_name.
-OIDataList FilterByArrayName(OIDataList data, string array_name)
+OIDataList FilterByArrayName(const OIDataList & data, string array_name)
 {
 	OIDataList output;
 
@@ -25,7 +25,7 @@ OIDataList FilterByArrayName(OIDataList data, string array_name)
 }
 
 /// Returns a vector of OIDataPtr whose combiner matches combiner_name
-OIDataList FilterByCombinerName(OIDataList data, string combiner_name)
+OIDataList FilterByCombinerName(const OIDataList & data, string combiner_name)
 {
 	OIDataList output;
 
@@ -39,7 +39,7 @@ OIDataList FilterByCombinerName(OIDataList data, string combiner_name)
 }
 
 /// Returns a vector of OIDataPtr which have the specified data type
-OIDataList FilterByDataType(OIDataList data, COIDataRow::DataTypes type)
+OIDataList FilterByDataType(const OIDataList & data, COIDataRow::DataTypes type)
 {
 	OIDataList output;
 
@@ -53,7 +53,7 @@ OIDataList FilterByDataType(OIDataList data, COIDataRow::DataTypes type)
 }
 
 /// Returns a vector of OIDataPtr which are within search_radius of the specifed (ra,dec) values.
-OIDataList FilterByObjectCoords(OIDataList data, double ra, double dec, double search_radius)
+OIDataList FilterByObjectCoords(const OIDataList & data, double ra, double dec, double search_radius)
 {
 	OIDataList output;
 
@@ -67,7 +67,7 @@ OIDataList FilterByObjectCoords(OIDataList data, double ra, double dec, double s
 }
 
 /// Returns a vector of OIDataPtr which correspond to the specified object_name
-OIDataList FilterByObjectName(OIDataList data, string object_name)
+OIDataList FilterByObjectName(const OIDataList & data, string object_name)
 {
 	OIDataList output;
 
@@ -82,7 +82,7 @@ OIDataList FilterByObjectName(OIDataList data, string object_name)
 
 
 /// Returns a vector of OIDataPtrs whose observation time is within the range specified.
-OIDataList FilterByObservationMJD(OIDataList data, pair<double, double> mjd_range)
+OIDataList FilterByObservationMJD(const OIDataList & data, pair<double, double> mjd_range)
 {
 	OIDataList output;
 
@@ -96,7 +96,9 @@ OIDataList FilterByObservationMJD(OIDataList data, pair<double, double> mjd_rang
 }
 
 /// Returns a vector of OIDataPtrs which contain data from within the specified wavelength range.
-OIDataList FilterByWavelength(OIDataList data, pair<double,double> wavelength_range)
+/// Wavelength filtering is accomplished by modifying the underlying data flags, therefore this
+/// function performs deep copies of the data structures when needed.
+OIDataList FilterByWavelength(const OIDataList & data, pair<double,double> wavelength_range)
 {
 	// This function applies filtering to the data itself, therefore it
 	//

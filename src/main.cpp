@@ -46,20 +46,30 @@ int main(int argc, char *argv[])
 	COIV2Row * a = reinterpret_cast<COIV2Row *>(data[0].get());
 	cout << "Original: " << a->v2_data[0];
 
+	// Try doing a recalibration:
 	OICalibratorPtr old_cal = OICalibratorPtr( new CUniformDisk(0.4 * MAS_TO_RAD) );
 	OICalibratorPtr new_cal = OICalibratorPtr( new CUniformDisk(0.5 * MAS_TO_RAD) );
 	OIDataList recal = Recalibrate(data, old_cal, new_cal);
-
+	// Check it
 	a = reinterpret_cast<COIV2Row *>(data[0].get());
 	COIV2Row * b = reinterpret_cast<COIV2Row *>(recal[0].get());
-
 	cout << ", Original post-recal: " << a->v2_data[0] << ", Recal: " << b->v2_data[0] << endl;
 
+	// Spectral bootstrap test
 	OIDataList boot_spec = Bootstrap_Spectral(data);
+	OIDataList bs_V2 = FilterByDataType(data, COIDataRow::OI_VIS2);
+	OIDataList bs_T3 = FilterByDataType(data, COIDataRow::OI_T3);
 	cout << "Trying spectral bootstrap. Pre N(rows): " << data.size() << " post: " << boot_spec.size() << endl;
+	cout << "N(V2) before: " << CountActiveData(V2) << " and after: " << CountActiveData(bs_V2) << endl;
+	cout << "N(T3) before: " << CountActiveData(T3) << " and after: " << CountActiveData(bs_T3) << endl;
 
+	// Random bootstrap test
 	OIDataList boot_rand = Bootstrap_Random(data);
+	OIDataList br_V2 = FilterByDataType(data, COIDataRow::OI_VIS2);
+	OIDataList br_T3 = FilterByDataType(data, COIDataRow::OI_T3);
 	cout << "Trying random bootstrap. Pre N(rows): " << data.size() << " post: " << boot_rand.size() << endl;
+	cout << "N(V2) before: " << CountActiveData(V2) << " and after: " << CountActiveData(br_V2) << endl;
+	cout << "N(T3) before: " << CountActiveData(T3) << " and after: " << CountActiveData(br_T3) << endl;
 
 	return 0;
 }

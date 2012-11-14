@@ -26,6 +26,8 @@ typedef shared_ptr<COICalibrator> OICalibratorPtr;
 class COIDataRow;
 typedef shared_ptr<COIDataRow> OIDataRowPtr;
 
+double AverageMJD(const OIDataList & data);
+
 OIDataList Bootstrap_Random(const OIDataList & data);
 void Bootstrap_Random_Helper(const OIDataList & input, OIDataList & output);
 

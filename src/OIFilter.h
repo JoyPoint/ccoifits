@@ -38,13 +38,13 @@ using namespace std;
 namespace ccoifits
 {
 
-OIDataList FilterByArrayName(OIDataList data, string array_name);
-OIDataList FilterByCombinerName(OIDataList data, string combiner_name);
-OIDataList FilterByDataType(OIDataList data, COIDataRow::DataTypes type);
-OIDataList FilterByObjectCoords(OIDataList data, double ra, double dec, double search_radius);
-OIDataList FilterByObjectName(OIDataList data, string object_name);
-OIDataList FilterByObservationMJD(OIDataList data, pair<double, double> mjd_range);
-OIDataList FilterByWavelength(OIDataList data, pair<double,double> wavelength_range);
+OIDataList FilterByArrayName(const OIDataList & data, string array_name);
+OIDataList FilterByCombinerName(const OIDataList & data, string combiner_name);
+OIDataList FilterByDataType(const OIDataList & data, COIDataRow::DataTypes type);
+OIDataList FilterByObjectCoords(const OIDataList & data, double ra, double dec, double search_radius);
+OIDataList FilterByObjectName(const OIDataList & data, string object_name);
+OIDataList FilterByObservationMJD(const OIDataList & data, pair<double, double> mjd_range);
+OIDataList FilterByWavelength(const OIDataList & data, pair<double,double> wavelength_range);
 
 
 //OIDataList FilterByBaseline(OIDataList data, vector<OIBaseline> baselines);
