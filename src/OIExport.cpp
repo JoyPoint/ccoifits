@@ -28,8 +28,8 @@ namespace ccoifits
 /// To find the uv point of
 
 void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_points,
-		valarray<complex<double>> & vis, valarray<complex<double>> & vis_err, vector<unsigned int> vis_uv_ref,
-		valarray<double> & vis2, valarray<double> & vis2_err, vector<unsigned int> vis2_uv_ref,
+		valarray<complex<double>> & vis, valarray<complex<double>> & vis_err, vector<unsigned int> & vis_uv_ref,
+		valarray<double> & vis2, valarray<double> & vis2_err, vector<unsigned int> & vis2_uv_ref,
 		valarray<complex<double>> & t3, valarray<complex<double>> & t3_err,
 		vector<tuple<unsigned int, unsigned int, unsigned int>> & t3_uv_ref,
 		vector<tuple<short, short, short>> & t3_uv_sign)
