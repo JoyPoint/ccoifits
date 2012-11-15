@@ -121,8 +121,8 @@ public:
 		assert(mask.size() == data.size());
 
 		// Determine how many elements are active in the mask and create a storage array
-		unsigned int n_true = mask.sum();
-		T output(n_true);
+		unsigned int n_active = mask.size() - mask.sum();
+		T output(n_active);
 
 		// iterate over the elements, i, of data
 		for(int i = 0, j = 0; i < mask.size(); i++)

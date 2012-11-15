@@ -45,18 +45,18 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 
 	// Now minimize the number of UV points. We compare every uv point in t_uv to the output array, uv_points.
 	// We also keep track of any conjugation that needs to happen.
-	for(int i = 0; i < uv_points.size(); i++)
+	for(int i = 0; i < t_uv.size(); i++)
 	{
 		int j = 0;
 		int match = 0;	// takes values {-1, 0, 1}
-		for(; j < t_uv.size() && match == 0; j++)
+		for(; j < uv_points.size() && match == 0; j++)
 			match = COIUV::compare_uv(t_uv[j], uv_points[i]);
 
 		// No match found
 		if(match == 0)
 		{
 			uv_points.push_back(t_uv[i]);
-			t_uv_ref.push_back(uv_points.size());
+			t_uv_ref.push_back(uv_points.size()-1);
 			t_uv_sign.push_back(1);
 		}
 		else
@@ -200,7 +200,7 @@ void Export_Direct(const OIDataList & data_list, vector<pair<double,double> > & 
 		if(t3_row != NULL)
 		{
 			data[slice(j, t_n_data, 1)] = t3_row->GetMaskedData();
-
+			data_err[slice(j, t_n_data, 1)] = t3_row->GetMaskedDataError();
 		}
 
 		// Increment the output array counter
