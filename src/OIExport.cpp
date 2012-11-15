@@ -153,6 +153,7 @@ void Export_Direct(const OIDataList & data_list, vector<pair<double,double> > & 
 		if(vis2_row != NULL)
 		{
 			data[slice(j, t_n_data, 1)] = vis2_row->GetMaskedData();
+			data_err[slice(j, t_n_data, 1)] = vis2_row->GetMaskedDataError();
 		}
 
 		// Increment the output array counter
