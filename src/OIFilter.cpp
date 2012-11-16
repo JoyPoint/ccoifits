@@ -39,6 +39,7 @@ OIDataList FilterByCombinerName(const OIDataList & data, string combiner_name)
 }
 
 /// Returns a vector of OIDataPtr which have the specified data type
+/// Operation is O(data.size())
 OIDataList FilterByDataType(const OIDataList & data, COIDataRow::DataTypes type)
 {
 	OIDataList output;
@@ -50,6 +51,22 @@ OIDataList FilterByDataType(const OIDataList & data, COIDataRow::DataTypes type)
 	}
 
 	return output;
+}
+
+/// Splits the data into three sublists based upon data type.
+/// Operation is O( data.size() ) (i.e. faster than three calls to FilterByDataType
+void FilterByDataType(const OIDataList & data, OIDataList & vis_rows, OIDataList & v2_rows, OIDataList & t3_rows)
+{
+	// First split the data into three sublists:
+	for(auto row: data)
+	{
+		if(row->GetType() == COIDataRow::OI_VIS)
+			vis_rows.push_back(row);
+		else if(row->GetType() == COIDataRow::OI_VIS2)
+			v2_rows.push_back(row);
+		else if(row->GetType() == COIDataRow::OI_T3)
+			t3_rows.push_back(row);
+	}
 }
 
 /// Returns a vector of OIDataPtr which are within search_radius of the specifed (ra,dec) values.

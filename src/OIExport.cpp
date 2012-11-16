@@ -16,11 +16,13 @@
 #include "COIT3Row.h"
 #include "OIFilter.h"
 #include "OITools.h"
+#include "UVKDTree.h"
 
 using namespace std;
 
 namespace ccoifits
 {
+
 
 /// Directly exports all data contained in data to the output valarrays and attempts to minimize the
 /// total number of UV points in the data set.
@@ -34,63 +36,94 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 		vector<tuple<unsigned int, unsigned int, unsigned int>> & t3_uv_ref,
 		vector<tuple<short, short, short>> & t3_uv_sign)
 {
-	// First call direct export to get the raw data out
-	vector<pair<double,double> > t_uv;
-	vector<unsigned int> t_uv_ref;
-	vector<unsigned int> t_uv_sign;
+	// First split data into three sublists:
+	OIDataList t_vis;
+	OIDataList t_vis2;
+	OIDataList t_t3;
+	FilterByDataType(data, t_vis, t_vis2, t_t3);
 
-	Export_Direct(data, t_uv, vis, vis_err, vis2, vis2_err, t3, t3_err);
+	// Normally there are visibilities or V2s at locations where T3s (or T4s) exist, so we are
+	// going to try to exploit this property.
+	UVKDTree tree;
+	if(t_vis.size() > 0)
+		tree.BuildTree(t_vis);
+	else if(t_vis2.size() > 0)
+		tree.BuildTree(t_vis2);
+	else if(t_t3.size() > 0)
+		tree.BuildTree(t_t3);
+	else
+		throw "ccoifits::Export_MinUV: No data found!";
 
-	// TODO: This is an O(N^2) operation.  We should be able to do this in O(N log(N)) (at worst) using a kd-tree
+	// We should now have a nearly balanced tree of UV points.  Now lets start exporting data.
 
-	// Now minimize the number of UV points. We compare every uv point in t_uv to the output array, uv_points.
-	// We also keep track of any conjugation that needs to happen.
-	for(int i = 0; i < t_uv.size(); i++)
-	{
-		int j = 0;
-		int match = 0;	// takes values {-1, 0, 1}
-		for(; j < uv_points.size() && match == 0; j++)
-			match = COIUV::compare_uv(t_uv[j], uv_points[i]);
 
-		// No match found
-		if(match == 0)
-		{
-			uv_points.push_back(t_uv[i]);
-			t_uv_ref.push_back(uv_points.size()-1);
-			t_uv_sign.push_back(1);
-		}
-		else
-		{
-			t_uv_ref.push_back(j);
-			t_uv_sign.push_back(match);
-		}
-	}
-
-	// Now set the *_uv_ref and sign values
-	// First OI_VIS:
-	int offset = 0;
-	for(int i = 0; i < vis.size(); i++)
-	{
-		vis_uv_ref.push_back(t_uv_ref[i]);
-	}
-
-	// Next OI_VIS2
-	offset = vis.size();
-	for(int i = 0; i < vis2.size(); i++)
-	{
-		vis2_uv_ref.push_back(t_uv_ref[offset + i]);
-	}
-
-	// Lastly OI_T3.  Remember we need signs here too.
-	offset = vis.size() + vis2.size();
-	for(int i = 0; i < t3.size(); i++)
-	{
-		tuple<unsigned int, unsigned int, unsigned int> uv_refs(t_uv_ref[offset + 3*i], t_uv_ref[offset + 3*i + 1], t_uv_ref[offset + 3*i + 2]);
-		t3_uv_ref.push_back(uv_refs);
-
-		tuple<short, short, short> signs(t_uv_sign[offset + 3*i], t_uv_sign[offset + 3*i + 1], t_uv_sign[offset + 3*i + 2]);
-		t3_uv_sign.push_back(signs);
-	}
+//	// First call direct export to get the raw data out
+//	vector<pair<double,double> > t_uv;
+//	vector<unsigned int> t_uv_ref;
+//	vector<unsigned int> t_uv_sign;
+//
+//	Export_Direct(data, t_uv, vis, vis_err, vis2, vis2_err, t3, t3_err);
+//
+//	// TODO: This is an O(N^2) operation.  We should be able to do this in O(N log(N)) (at worst) using a kd-tree
+//	cout << "Before minimization" << endl;
+//	cout << "NUV " << t_uv.size() << endl;
+//	cout << "N Vis " << vis.size() << endl;
+//	cout << "N V2 " << vis2.size() << endl;
+//	cout << "N T3 " << t3.size() << endl;
+//
+//	// Now minimize the number of UV points. We compare every uv point in t_uv to the output array, uv_points.
+//	// We also keep track of any conjugation that needs to happen.
+//	for(int i = 0; i < t_uv.size(); i++)
+//	{
+//		int j = 0;
+//		int match = 0;	// takes values {-1, 0, 1}
+//		for(; j < uv_points.size() && match == 0; j++)
+//			match = COIUV::compare_uv(t_uv[j], uv_points[i]);
+//
+//		// No match found
+//		if(match == 0)
+//		{
+//			uv_points.push_back(t_uv[i]);
+//			t_uv_ref.push_back(uv_points.size()-1);
+//			t_uv_sign.push_back(1);
+//		}
+//		else
+//		{
+//			t_uv_ref.push_back(j);
+//			t_uv_sign.push_back(match);
+//		}
+//	}
+//
+//	// Now set the *_uv_ref and sign values
+//	// First OI_VIS:
+//	int offset = 0;
+//	for(int i = 0; i < vis.size(); i++)
+//	{
+//		vis_uv_ref.push_back(t_uv_ref[i]);
+//	}
+//
+//	// Next OI_VIS2
+//	offset = vis.size();
+//	for(int i = 0; i < vis2.size(); i++)
+//	{
+//		vis2_uv_ref.push_back(t_uv_ref[offset + i]);
+//	}
+//
+//	// Lastly OI_T3.  Remember we need signs here too.
+//	offset = vis.size() + vis2.size();
+//	for(int i = 0; i < t3.size(); i++)
+//	{
+//		tuple<unsigned int, unsigned int, unsigned int> uv_refs(t_uv_ref[offset + 3*i], t_uv_ref[offset + 3*i + 1], t_uv_ref[offset + 3*i + 2]);
+//		t3_uv_ref.push_back(uv_refs);
+//
+//		tuple<short, short, short> signs(t_uv_sign[offset + 3*i], t_uv_sign[offset + 3*i + 1], t_uv_sign[offset + 3*i + 2]);
+//		t3_uv_sign.push_back(signs);
+//	}
+//
+//	// Temporary, export some statistics
+//	cout << "After minimization" << endl;
+//	cout << "NUV " << uv_points.size() << endl;
+//	cout << "N V2 " << vis2.size() << endl;
 }
 
 /// Directly exports all data contained in data to the output valarrays
@@ -107,9 +140,10 @@ void Export_Direct(const OIDataList & data, vector<pair<double,double> > & uv_po
 		valarray<complex<double>> & t3, valarray<complex<double>> & t3_err)
 {
 	// First split data into three sublists:
-	OIDataList t_vis = FilterByDataType(data, COIDataRow::OI_VIS);
-	OIDataList t_vis2 = FilterByDataType(data, COIDataRow::OI_VIS2);
-	OIDataList t_t3 = FilterByDataType(data, COIDataRow::OI_T3);
+	OIDataList t_vis;
+	OIDataList t_vis2;
+	OIDataList t_t3;
+	FilterByDataType(data, t_vis, t_vis2, t_t3);
 
 //	DirectExport(t_vis, uv_points, vis, vis_err);
 	Export_Direct(t_vis2, uv_points, vis2, vis2_err);

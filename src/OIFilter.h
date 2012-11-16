@@ -41,6 +41,7 @@ namespace ccoifits
 OIDataList FilterByArrayName(const OIDataList & data, string array_name);
 OIDataList FilterByCombinerName(const OIDataList & data, string combiner_name);
 OIDataList FilterByDataType(const OIDataList & data, COIDataRow::DataTypes type);
+void FilterByDataType(const OIDataList & data, OIDataList & vis_rows, OIDataList & v2_rows, OIDataList & t3_rows);
 OIDataList FilterByObjectCoords(const OIDataList & data, double ra, double dec, double search_radius);
 OIDataList FilterByObjectName(const OIDataList & data, string object_name);
 OIDataList FilterByObservationMJD(const OIDataList & data, pair<double, double> mjd_range);
