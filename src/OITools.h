@@ -9,7 +9,7 @@
 #define OITOOLS_H_
 
 #include <memory>
-#include "COIFile.h"
+#include <vector>
 
 using namespace std;
 
@@ -25,6 +25,7 @@ typedef shared_ptr<COICalibrator> OICalibratorPtr;
 
 class COIDataRow;
 typedef shared_ptr<COIDataRow> OIDataRowPtr;
+typedef vector<OIDataRowPtr> OIDataList;
 
 double AverageMJD(const OIDataList & data);
 

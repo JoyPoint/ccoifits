@@ -5,45 +5,24 @@
 # CCFITS_LIBRARIES       - Location of CCFITS's libraries
 # CCFITS_FOUND           - True if CCFITS has been located
 
-#=============================================================================
-# Copyright 2012 Brian Kloppenborg
-#
-#  This code is licensed under the MIT License.  See the FindMULTINEST.cmake script
-#  for the text of the license.
-#
-# The MIT License
-#
-# License for the specific language governing rights and limitations under
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included
-# in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-# DEALINGS IN THE SOFTWARE.
-#=============================================================================
+find_package(CFITSIO REQUIRED)
 
-FIND_PACKAGE(CFITSIO REQUIRED)
+FIND_LIBRARY(CCFITS_LIBRARY 
+    NAMES libCCfits.so libCCfits.a
+    DOC "CCFITS library.")
 
-FIND_PATH(CCFITS_INCLUDE_DIR CCfits.h
-    HINTS /usr/include/CCfits)
+FIND_PATH(CCFITS_INCLUDE_DIR 
+    NAMES CCfits.h
+    HINTS /usr/include/CCfits
+    DOC "CCOIFITS include directory.")
 
-FIND_LIBRARY(CCFITS_LIBRARY NAMES libCCfits.so libCCfits.a)
+set(CCFITS_LIBRARIES ${CCFITS_LIBRARY} ${CFITSIO_LIBRARY})
+set(CCFITS_INCLUDE_DIRS ${CCFITS_INCLUDE_DIR} ${CFITSIO_INCLUDE_DIR})
 
-INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(CCFITS DEFAULT_MSG CCFITS_LIBRARY CCFITS_INCLUDE_DIR)
+include(FindPackageHandleStandardArgs)
+# handle the QUIETLY and REQUIRED arguments and set CCOIFITS_FOUND to TRUE
+# if all listed variables are TRUE
+find_package_handle_standard_args(CCFITS DEFAULT_MSG
+                                  CCFITS_LIBRARY CCFITS_INCLUDE_DIR)
 
-SET(CCFITS_INCLUDE_DIRS ${CCFITS_INCLUDE_DIR} ${CFITSIO_INCLUDE_DIRS})
-SET(CCFITS_LIBRARIES ${CCFITS_LIBRARY} ${CFITSIO_LIBRARIES})
-
-MARK_AS_ADVANCED(CCFITS_LIBRARY CCFITS_INCLUDE_DIR CCFITS_INCLUDE_DIRS CCFITS_LIBRARIES)
+mark_as_advanced(CCFITS_INCLUDE_DIR CCFITS_LIBRARY)

@@ -16,12 +16,14 @@
 #include <cassert>
 #include <memory>
 
-#include "COIDataRow.h"
-
 using namespace std;
 
 namespace ccoifits
 {
+
+class COIDataRow;
+typedef shared_ptr<COIDataRow> OIDataRowPtr;
+typedef vector<OIDataRowPtr> OIDataList;
 
 class UVKDTree;
 class kd_uv_node;

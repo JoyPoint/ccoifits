@@ -12,13 +12,13 @@
 #include <cmath>
 using namespace std;
 
+#include "COIFile.h"
 #include "OIFilter.h"
 #include "COIWavelength.h"
 #include "COIDataRow.h"
 #include "COIV2Row.h"
 #include "COIT3Row.h"
 #include "COICalibrator.h"
-
 
 namespace ccoifits
 {

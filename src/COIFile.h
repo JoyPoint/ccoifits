@@ -13,8 +13,6 @@
 #include <vector>
 #include <map>
 
-#include "COIDataRow.h"
-
 using namespace CCfits;
 using namespace std;
 
@@ -30,6 +28,9 @@ typedef shared_ptr<COIArray> OIArrayPtr;
 class COIWavelength;
 typedef shared_ptr<COIWavelength> OIWavelengthPtr;
 
+class COIDataRow;
+typedef shared_ptr<COIDataRow> OIDataRowPtr;
+typedef vector<OIDataRowPtr> OIDataList;
 
 class COIFile
 {
