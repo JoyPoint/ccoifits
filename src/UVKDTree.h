@@ -43,19 +43,28 @@ protected:
 	node_ptr root;
 
 public:
+	void AssignIndicies();
+protected:
+	static void AssignIndicies(node_ptr & node, unsigned int & node_index);
+public:
 	void BuildTree(const OIDataList & data);
 
 	static bool compare_uv(const uv_point & uv1, const uv_point & uv2);
+
+	vector<pair<double,double> > Flatten();
+	static vector<pair<double, double>> Flatten(node_ptr & node, vector<pair<double,double>> & output);
 
 	node_ptr FindUV(const uv_point & uv);
 	node_ptr FindUV(const uv_point & uv, bool insert_on_fail);
 protected:
 	node_ptr FindUV(const uv_point & uv, node_ptr & node, unsigned int depth, bool insert_on_fail);
 	node_ptr Insert(uv_point & uv);
-	node_ptr Insert(const uv_point & uv, node_ptr & node, unsigned int depth);
+	static node_ptr Insert(const uv_point & uv, node_ptr & node, unsigned int depth);
 
 public:
 	static bool less_than(const uv_point & uv, const node_ptr & node, unsigned int depth);
+	unsigned int size();
+	unsigned int size(const node_ptr & node);
 	static bool uv_sort_u(const uv_point &a, const uv_point &b);
 	static bool uv_sort_v(const uv_point &a, const uv_point &b);
 

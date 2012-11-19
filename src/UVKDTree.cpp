@@ -10,11 +10,30 @@
 #include <cmath>
 #include <algorithm>
 #include "COIDataRow.h"
+#include <iostream>
 
 using namespace std;
 
 namespace ccoifits
 {
+
+void UVKDTree::AssignIndicies()
+{
+	unsigned int id = 0;
+	AssignIndicies(this->root, id);
+}
+
+void UVKDTree::AssignIndicies(node_ptr & node, unsigned int & node_index)
+{
+	node_index += 1;
+	node->index = node_index;
+
+	if(node->left_child != NULL)
+		AssignIndicies(node->left_child, node_index);
+
+	if(node->right_child != NULL)
+		AssignIndicies(node->right_child, node_index);
+}
 
 /// Builds a KD tree of UVPoints from data
 void UVKDTree::BuildTree(const OIDataList & data)
@@ -46,13 +65,22 @@ void UVKDTree::BuildTree(const OIDataList & data)
 	}
 
 	// Now build the tree
-	this->root = uv_tree(uv_points.begin(), uv_points.end(), 0);
+	// NOTE: Because of how the building algorithim works, the start and
+	// end points must be the true starting and ending points of the vector.
+	// Normally end points to an element one beyond the end of the vector
+	// so we simply decrement end before passing it in.
+	this->root = uv_tree(uv_points.begin(), uv_points.end() - 1, 0);
 }
 
 bool UVKDTree::compare_uv(const uv_point & uv1, const uv_point & uv2)
 {
-	double thresh = 1E-5;
-	if(fabs(uv1.first - uv2.first) < thresh && fabs(uv1.second - uv2.second) < thresh)
+
+	// Because every point is conjugated into the +u half-plane, we can compare
+	// points using a thresholded comparison:
+	double du = fabs(uv1.first - uv2.first);
+	double dv = fabs(uv1.second - uv2.second);
+
+	if(du < 1 && dv < 1)
 		return true;
 
 	return false;
@@ -91,6 +119,26 @@ node_ptr UVKDTree::FindUV(const uv_point & uv, node_ptr & node, unsigned int dep
 
 	// otherwise return a null node_ptr
 	return node_ptr();
+}
+
+vector<pair<double,double> > UVKDTree::Flatten()
+{
+	vector<pair<double,double> > output;
+	Flatten(this->root, output);
+	return output;
+}
+
+vector<pair<double, double>> UVKDTree::Flatten(node_ptr & node, vector<pair<double,double>> & output)
+{
+	output.push_back(node->uv);
+
+	if(node->left_child != NULL)
+		Flatten(node->left_child, output);
+
+	if(node->right_child != NULL)
+		Flatten(node->right_child, output);
+
+	return output;
 }
 
 /// Inserts the point uv into the tree.
@@ -138,6 +186,25 @@ bool UVKDTree::less_than(const uv_point & uv, const node_ptr & node, unsigned in
 	return false;
 }
 
+unsigned int UVKDTree::size()
+{
+	return size(this->root);
+}
+
+unsigned int UVKDTree::size(const node_ptr & node)
+{
+	// Count the current node.
+	int n_nodes = 1;
+
+	if(node->left_child != NULL)
+		n_nodes += size(node->left_child);
+
+	if(node->right_child != NULL)
+		n_nodes += size(node->right_child);
+
+	return n_nodes;
+}
+
 bool UVKDTree::uv_sort_u(const uv_point &a, const uv_point &b)
 {
 	return a.first < b.first;
@@ -151,10 +218,8 @@ bool UVKDTree::uv_sort_v(const uv_point &a, const uv_point &b)
 node_ptr UVKDTree::uv_tree(vector<uv_point>::iterator start, vector<uv_point>::iterator end, unsigned int depth)
 {
 	// If there are no points, return an empty node pointer
-	unsigned int size = end - start;
+	unsigned int size = distance(start, end);
 	unsigned int median = size / 2;
-	if(size == 0)
-		return node_ptr();
 
 	// Sort by either u or v, depending on the depth:
 	int axis = depth / 2;
@@ -172,16 +237,25 @@ node_ptr UVKDTree::uv_tree(vector<uv_point>::iterator start, vector<uv_point>::i
 
 	// Prune repeated elements from the left list
 	auto left = mid - 1;
-	while(left != start && compare_uv(*(left), *(mid)));
+	while(left != start && compare_uv(*(left), *(mid)))
+	{
 		left--;
+	}
+
+	// If elements still remain, recurse:
+	if(left > (start - 1))
+		node->left_child = uv_tree(start, left, depth+1);
 
 	// Prune repeated elements from the right list
 	auto right = mid + 1;
-	while(right != end && compare_uv(*(right), *(mid)));
+	while(right != end && compare_uv(*(right), *(mid)))
+	{
 		right++;
+	}
 
-	node->left_child = uv_tree(start, left, depth+1);
-	node->right_child = uv_tree(right, end, depth+1);
+	// If elements still remain, recurse:
+	if(right < (end + 1))
+		node->right_child = uv_tree(right, end, depth+1);
 
 	return node;
 }
