@@ -40,90 +40,165 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 	OIDataList t_vis;
 	OIDataList t_vis2;
 	OIDataList t_t3;
+	vector<node_ptr> t_vis_ref;
+	vector<node_ptr> t_v2_ref;
+	vector<tuple<node_ptr, node_ptr, node_ptr>> t_t3_ref;
 	FilterByDataType(data, t_vis, t_vis2, t_t3);
 
 	// Normally there are visibilities or V2s at locations where T3s (or T4s) exist, so we are
 	// going to try to exploit this property.
-	UVKDTree tree;
+	UVKDTree uv_tree;
 	if(t_vis.size() > 0)
-		tree.BuildTree(t_vis);
+		uv_tree.BuildTree(t_vis);
 	else if(t_vis2.size() > 0)
-		tree.BuildTree(t_vis2);
+		uv_tree.BuildTree(t_vis2);
 	else if(t_t3.size() > 0)
-		tree.BuildTree(t_t3);
+		uv_tree.BuildTree(t_t3);
 	else
 		throw "ccoifits::Export_MinUV: No data found!";
 
 	// We should now have a nearly balanced tree of UV points.  Now lets start exporting data.
+	Export_MinUV(uv_tree, t_vis2, t_v2_ref, vis2, vis2_err);
+//	cout << "N(V2) " << t_vis2.size() << endl;
+//	cout << "V2 uv_ref size " << t_v2_ref.size() << endl;
+//	cout << "Tree Size " << uv_tree.size() << endl;
 
+	Export_MinUV(uv_tree, t_t3, t_t3_ref, t3, t3_err, t3_uv_sign);
+//	cout << "N(T3) " << t_t3.size() << endl;
+//	cout << "T3 uv_ref size (1/3 total T3 records)" << t_t3_ref.size() << endl;
+//	cout << "Tree Size " << uv_tree.size() << endl;
 
-//	// First call direct export to get the raw data out
-//	vector<pair<double,double> > t_uv;
-//	vector<unsigned int> t_uv_ref;
-//	vector<unsigned int> t_uv_sign;
-//
-//	Export_Direct(data, t_uv, vis, vis_err, vis2, vis2_err, t3, t3_err);
-//
-//	// TODO: This is an O(N^2) operation.  We should be able to do this in O(N log(N)) (at worst) using a kd-tree
-//	cout << "Before minimization" << endl;
-//	cout << "NUV " << t_uv.size() << endl;
-//	cout << "N Vis " << vis.size() << endl;
-//	cout << "N V2 " << vis2.size() << endl;
-//	cout << "N T3 " << t3.size() << endl;
-//
-//	// Now minimize the number of UV points. We compare every uv point in t_uv to the output array, uv_points.
-//	// We also keep track of any conjugation that needs to happen.
-//	for(int i = 0; i < t_uv.size(); i++)
-//	{
-//		int j = 0;
-//		int match = 0;	// takes values {-1, 0, 1}
-//		for(; j < uv_points.size() && match == 0; j++)
-//			match = COIUV::compare_uv(t_uv[j], uv_points[i]);
-//
-//		// No match found
-//		if(match == 0)
-//		{
-//			uv_points.push_back(t_uv[i]);
-//			t_uv_ref.push_back(uv_points.size()-1);
-//			t_uv_sign.push_back(1);
-//		}
-//		else
-//		{
-//			t_uv_ref.push_back(j);
-//			t_uv_sign.push_back(match);
-//		}
-//	}
-//
-//	// Now set the *_uv_ref and sign values
-//	// First OI_VIS:
-//	int offset = 0;
-//	for(int i = 0; i < vis.size(); i++)
-//	{
-//		vis_uv_ref.push_back(t_uv_ref[i]);
-//	}
-//
-//	// Next OI_VIS2
-//	offset = vis.size();
-//	for(int i = 0; i < vis2.size(); i++)
-//	{
-//		vis2_uv_ref.push_back(t_uv_ref[offset + i]);
-//	}
-//
-//	// Lastly OI_T3.  Remember we need signs here too.
-//	offset = vis.size() + vis2.size();
-//	for(int i = 0; i < t3.size(); i++)
-//	{
-//		tuple<unsigned int, unsigned int, unsigned int> uv_refs(t_uv_ref[offset + 3*i], t_uv_ref[offset + 3*i + 1], t_uv_ref[offset + 3*i + 2]);
-//		t3_uv_ref.push_back(uv_refs);
-//
-//		tuple<short, short, short> signs(t_uv_sign[offset + 3*i], t_uv_sign[offset + 3*i + 1], t_uv_sign[offset + 3*i + 2]);
-//		t3_uv_sign.push_back(signs);
-//	}
-//
-//	// Temporary, export some statistics
-//	cout << "After minimization" << endl;
-//	cout << "NUV " << uv_points.size() << endl;
-//	cout << "N V2 " << vis2.size() << endl;
+	// Now that all of the data has been exported and any additional UV points inserted
+	// flatten out the UV tree so we may resolve the order of the uv points.
+	uv_tree.AssignIndicies();
+	uv_points = uv_tree.Flatten();
+
+	// Resolve out the node_ptr->node_index => array position.
+	for(auto node : t_vis_ref)
+		vis_uv_ref.push_back(node->index);
+
+	for(auto node : t_v2_ref)
+		vis2_uv_ref.push_back(node->index);
+
+	for(auto triplet : t_t3_ref)
+		t3_uv_ref.push_back( make_tuple(get<0>(triplet)->index, get<1>(triplet)->index, get<2>(triplet)->index) );
+}
+
+/// A helper function for exporting data. Specialized for COIV2Row records
+void Export_MinUV(UVKDTree & uv_tree, const OIDataList & data_list, vector<node_ptr> & uv_points, valarray<double> & data, valarray<double> & data_err)
+{
+	OIDataRowPtr row;
+	COIV2Row * vis2_row;
+	unsigned int t_n_data = 0;
+	vector<double> wavelengths;
+
+	// Allocate room in the data arrays:
+	int n_rows = data_list.size();
+	int n_data = CountActiveData(data_list);
+
+	data.resize(n_data);
+	data_err.resize(n_data);
+
+	// Now iterate through the data_list, exporting the UV points and data to the output arrays.
+	// 	i is the row counter
+	// 	j is the output data index
+	for(int i = 0, j = 0; i < n_rows; i++)
+	{
+		// For convenience, rename a few things:
+		row = data_list[i];
+		t_n_data = row->GetMaskedNData();
+		wavelengths = row->GetMaskedWavelengths();
+
+		// Generate and push_back scaled UV coordinates
+		for(auto wavelength : wavelengths)
+		{
+			for(auto uv : row->mUV)
+			{
+				uv_points.push_back( uv_tree.FindUV(uv->GetScaledPair(wavelength), true) );
+			}
+		}
+
+		// Now copy over the data:
+		vis2_row = dynamic_cast<COIV2Row*>(row.get());
+		if(vis2_row != NULL)
+		{
+			data[slice(j, t_n_data, 1)] = vis2_row->GetMaskedData();
+			data_err[slice(j, t_n_data, 1)] = vis2_row->GetMaskedDataError();
+		}
+
+		// Increment the output array counter
+		j += t_n_data;
+	}
+}
+
+/// A helper function for exporting data. Specialized for COIT3DataRow records.
+void Export_MinUV(UVKDTree & uv_tree, const OIDataList & data_list, vector<tuple<node_ptr, node_ptr, node_ptr> > & uv_refs,
+		valarray<complex<double>> & data, valarray<complex<double>> & data_err,
+		vector<tuple<short, short, short>> & uv_sign)
+{
+	OIDataRowPtr row;
+//	COIVisRow * vis_row;
+	COIT3Row * t3_row;
+	unsigned int t_n_data = 0;
+	vector<double> wavelengths;
+	uv_point scaled_uv;
+	valarray<short> sign(3);
+	valarray<node_ptr> uv_ref(3);
+
+	// Allocate room in the data arrays:
+	int n_rows = data_list.size();
+	int n_data = 0;
+	for(auto row : data_list)
+		n_data += row->GetMaskedNData();
+
+	data.resize(n_data);
+	data_err.resize(n_data);
+
+	// Now iterate through the data_list, exporting the UV points and data to the output arrays.
+	// 	i is the row counter
+	// 	j is the output data index
+	for(int i = 0, j = 0; i < n_rows; i++)
+	{
+		// For convenience, rename a few things:
+		row = data_list[i];
+		t_n_data = row->GetMaskedNData();
+		wavelengths = row->GetMaskedWavelengths();
+
+		// Generate and push_back scaled UV coordinates
+		for(auto wavelength : wavelengths)
+		{
+			for(int k = 0; k < 3; k++)
+			{
+				auto uv = row->mUV[k];
+				sign[k] = 1;
+
+				scaled_uv = uv->GetScaledPair(wavelength);
+
+				if(scaled_uv.first < 0)
+				{
+					scaled_uv.first *= -1;
+					scaled_uv.second *= -1;
+					sign[k] = -1;
+				}
+
+				uv_ref[k] = uv_tree.FindUV(scaled_uv, true);
+			}
+
+			uv_refs.push_back(make_tuple(uv_ref[0], uv_ref[1], uv_ref[2]));
+			uv_sign.push_back(make_tuple(sign[0], sign[1], sign[2]));
+		}
+
+		// Now copy over the data:
+		t3_row = dynamic_cast<COIT3Row*>(row.get());
+		if(t3_row != NULL)
+		{
+			data[slice(j, t_n_data, 1)] = t3_row->GetMaskedData();
+			data_err[slice(j, t_n_data, 1)] = t3_row->GetMaskedDataError();
+		}
+
+		// Increment the output array counter
+		j += t_n_data;
+	}
 }
 
 /// Directly exports all data contained in data to the output valarrays
