@@ -23,6 +23,10 @@ using namespace std;
 namespace ccoifits
 {
 
+class UVKDTree;
+class kd_uv_node;
+typedef shared_ptr<kd_uv_node> node_ptr;
+
 void Export_Direct(const OIDataList & data, vector<pair<double,double> > & uv_points,
 		valarray<complex<double>> & vis, valarray<complex<double>> & vis_err,
 		valarray<double> & vis2, valarray<double> & vis2_err,
@@ -37,6 +41,10 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 		valarray<complex<double>> & t3, valarray<complex<double>> & t3_err,
 		vector<tuple<unsigned int, unsigned int, unsigned int>> & t3_uv_ref,
 		vector<tuple<short, short, short>> & t3_uv_sign);
+void Export_MinUV(UVKDTree & uv_tree, const OIDataList & data_list, vector<node_ptr> & uv_points, valarray<double> & data, valarray<double> & data_err);
+void Export_MinUV(UVKDTree & uv_tree, const OIDataList & data_list, vector<tuple<node_ptr, node_ptr, node_ptr> > & uv_refs,
+		valarray<complex<double>> & data, valarray<complex<double>> & data_err,
+		vector<tuple<short, short, short>> & uv_sign);
 
 } /* namespace ccoifits */
 #endif /* OIEXPORT_H_ */

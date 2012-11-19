@@ -58,11 +58,22 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 		throw "ccoifits::Export_MinUV: No data found!";
 
 	// We should now have a nearly balanced tree of UV points.  Now lets start exporting data.
+	// In the ideal case where every T3/V2 has a matching V2/Vis record, the tree should not
+	// change in size.
+//	cout << "Tree Size " << uv_tree.size() << endl;
+//	cout << "Inserting OI_VIS records" << endl;
+//	Export_MinUV(uv_tree, t_vis, t_vis_ref, vis, vis_err);
+//	cout << "N(Vis) " << t_vis.size() << endl;
+//	cout << "Vis uv_ref size " << t_vis_ref.size() << endl;
+//	cout << "Tree Size " << uv_tree.size() << endl;
+
+//	cout << "Inserting OI_VIS2 records" << endl;
 	Export_MinUV(uv_tree, t_vis2, t_v2_ref, vis2, vis2_err);
 //	cout << "N(V2) " << t_vis2.size() << endl;
 //	cout << "V2 uv_ref size " << t_v2_ref.size() << endl;
 //	cout << "Tree Size " << uv_tree.size() << endl;
 
+//	cout << "Inserting OI_T3 records" << endl;
 	Export_MinUV(uv_tree, t_t3, t_t3_ref, t3, t3_err, t3_uv_sign);
 //	cout << "N(T3) " << t_t3.size() << endl;
 //	cout << "T3 uv_ref size (1/3 total T3 records)" << t_t3_ref.size() << endl;
