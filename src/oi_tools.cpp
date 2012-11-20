@@ -5,14 +5,14 @@
  *      Author: bkloppen
  */
 
-#include "OITools.h"
+#include "oi_tools.hpp"
 
 #include <random>
 #include <chrono>
 #include <cmath>
 using namespace std;
 
-#include "COIFile.h"
+#include "oi_file.hpp"
 #include "oi_filter.hpp"
 #include "COIWavelength.h"
 #include "COIDataRow.h"

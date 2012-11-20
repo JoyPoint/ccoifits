@@ -10,9 +10,9 @@
 
 #include <iostream>
 #include "main.h"
-#include "COIFile.h"
+#include "oi_file.hpp"
 #include "oi_filter.hpp"
-#include "OITools.h"
+#include "oi_tools.hpp"
 #include "CUniformDisk.h"
 
 #include "COIV2Row.h"

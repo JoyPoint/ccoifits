@@ -7,7 +7,7 @@
 
 #include "OI_VIS2.h"
 #include "COIV2Row.h"
-#include "COIFile.h"
+#include "oi_file.hpp"
 
 namespace ccoifits
 {

@@ -15,7 +15,7 @@
 #include "COIV2Row.h"
 #include "COIT3Row.h"
 #include "oi_filter.hpp"
-#include "OITools.h"
+#include "oi_tools.hpp"
 #include "UVKDTree.h"
 
 using namespace std;

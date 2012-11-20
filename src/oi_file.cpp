@@ -5,7 +5,7 @@
  *      Author: bkloppen
  */
 
-#include "COIFile.h"
+#include "oi_file.hpp"
 #include "OI_TARGET.h"
 #include "COITarget.h"
 #include "OI_ARRAY.h"

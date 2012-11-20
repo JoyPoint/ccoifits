@@ -7,7 +7,7 @@
 
 #include "OI_T3.h"
 #include "COIT3Row.h"
-#include "COIFile.h"
+#include "oi_file.hpp"
 
 #include <limits>
 
