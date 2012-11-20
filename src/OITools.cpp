@@ -13,7 +13,7 @@
 using namespace std;
 
 #include "COIFile.h"
-#include "OIFilter.h"
+#include "oi_filter.hpp"
 #include "COIWavelength.h"
 #include "COIDataRow.h"
 #include "COIV2Row.h"

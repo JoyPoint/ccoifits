@@ -5,7 +5,7 @@
  *      Author: bkloppen
  */
 
-#include "OIFilter.h"
+#include "oi_filter.hpp"
 
 namespace ccoifits
 {

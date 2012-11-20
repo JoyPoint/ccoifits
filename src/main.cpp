@@ -11,7 +11,7 @@
 #include <iostream>
 #include "main.h"
 #include "COIFile.h"
-#include "OIFilter.h"
+#include "oi_filter.hpp"
 #include "OITools.h"
 #include "CUniformDisk.h"
 

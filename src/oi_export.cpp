@@ -5,7 +5,7 @@
  *      Author: bkloppen
  */
 
-#include "OIExport.h"
+#include "oi_export.hpp"
 
 #include <vector>
 #include <complex>
@@ -14,7 +14,7 @@
 #include "COIDataRow.h"
 #include "COIV2Row.h"
 #include "COIT3Row.h"
-#include "OIFilter.h"
+#include "oi_filter.hpp"
 #include "OITools.h"
 #include "UVKDTree.h"
 
