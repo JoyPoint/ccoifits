@@ -19,6 +19,14 @@ using namespace std;
 namespace ccoifits
 {
 
+enum DataTypes
+{
+	OI_VIS,
+	OI_VIS2,
+	OI_T3,
+	INVALID
+};
+
 class COITarget;
 typedef shared_ptr<COITarget> OITargetPtr;
 

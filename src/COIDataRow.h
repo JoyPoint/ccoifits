@@ -30,6 +30,9 @@
 #include <memory>
 #include <complex>
 #include <cassert>
+
+#include "oi_file.hpp"
+
 #include "COIUV.h"
 
 using namespace std;
@@ -37,8 +40,8 @@ using namespace std;
 namespace ccoifits
 {
 
-class OI_DATA_TABLE;
-typedef shared_ptr<OI_DATA_TABLE> DataTablePtr;
+class COI_DATA_TABLE;
+typedef shared_ptr<COI_DATA_TABLE> DataTablePtr;
 
 // Note: One must be careful with the OIDataList. It is a vector of shared_ptrs, therefore
 // a copy simply increments the reference count on the underlying object.
@@ -58,14 +61,6 @@ typedef shared_ptr<COIWavelength> OIWavelengthPtr;
 
 class COIDataRow
 {
-public:
-	enum DataTypes
-	{
-		OI_VIS,
-		OI_VIS2,
-		OI_T3,
-		INVALID
-	};
 
 protected:
 	DataTypes mType;

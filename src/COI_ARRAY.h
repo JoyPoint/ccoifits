@@ -5,10 +5,10 @@
  *      Author: bkloppen
  */
 
-#ifndef OIARRAY_H_
-#define OIARRAY_H_
+#ifndef COI_ARRAY_H_
+#define COI_ARRAY_H_
 
-#include "OI_TABLE.h"
+#include "COI_TABLE.h"
 
 namespace ccoifits
 {
@@ -19,12 +19,12 @@ typedef shared_ptr<COIArray> OIArrayPtr;
 class COIStation;
 typedef shared_ptr<COIStation> OIStationPtr;
 
-class OI_ARRAY : public OI_TABLE
+class COI_ARRAY : public COI_TABLE
 {
 
 public:
-	OI_ARRAY(ExtHDU & table);
-	virtual ~OI_ARRAY();
+	COI_ARRAY(ExtHDU & table);
+	virtual ~COI_ARRAY();
 
 	OIArrayPtr read();
 
@@ -35,4 +35,4 @@ protected:
 
 } /* namespace ccoifits */
 
-#endif /* OIARRAY_H_ */
+#endif /* COI_ARRAY_H_ */

@@ -7,28 +7,28 @@
  *  An abstract class for all OIFITS data tables (i.e. OI_VIS, OI_VIS2, OI_T3).
  */
 
-#ifndef OI_DATA_TABLE_H_
-#define OI_DATA_TABLE_H_
+#ifndef COI_DATA_TABLE_H_
+#define COI_DATA_TABLE_H_
 
-#include "OI_TABLE.h"
+#include "COI_TABLE.h"
 #include "COIDataRow.h"
 
 namespace ccoifits
 {
 
-class OI_DATA_TABLE;
-typedef shared_ptr<OI_DATA_TABLE> DataTablePtr;
+class COI_DATA_TABLE;
+typedef shared_ptr<COI_DATA_TABLE> DataTablePtr;
 
 class COIDataRow;
 typedef shared_ptr<COIDataRow> OIDataRowPtr;
 typedef vector<OIDataRowPtr> OIDataList;
 
-class OI_DATA_TABLE: public OI_TABLE
+class COI_DATA_TABLE: public COI_TABLE
 {
 
 public:
-	OI_DATA_TABLE(ExtHDU & table);
-	virtual ~OI_DATA_TABLE();
+	COI_DATA_TABLE(ExtHDU & table);
+	virtual ~COI_DATA_TABLE();
 
 	string GetDateObs();
 	string GetArrayName();
@@ -39,4 +39,4 @@ public:
 };
 
 } /* namespace ccoifits */
-#endif /* OI_DATA_TABLE_H_ */
+#endif /* COI_DATA_TABLE_H_ */

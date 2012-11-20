@@ -10,8 +10,8 @@
  *  here or in derived classes unless the work is computationally expensive.
  */
 
-#ifndef COITABLE_H_
-#define COITABLE_H_
+#ifndef COI_TABLE_H_
+#define COI_TABLE_H_
 
 #include <array>
 #include <valarray>
@@ -24,14 +24,14 @@ using namespace CCfits;
 namespace ccoifits
 {
 
-class OI_TABLE
+class COI_TABLE
 {
 protected:
 	ExtHDU & mTable;
 
 public:
-	OI_TABLE(ExtHDU & table);
-	virtual ~OI_TABLE();
+	COI_TABLE(ExtHDU & table);
+	virtual ~COI_TABLE();
 
 	int GetRevision();
 
@@ -75,4 +75,4 @@ public:
 };
 
 } /* namespace ccoifits */
-#endif /* OI_TARGET_H_ */
+#endif /* COI_TABLE_H_ */

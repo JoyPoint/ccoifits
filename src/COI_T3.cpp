@@ -5,7 +5,7 @@
  *      Author: bkloppen
  */
 
-#include "OI_T3.h"
+#include "COI_T3.h"
 #include "COIT3Row.h"
 #include "oi_file.hpp"
 
@@ -16,8 +16,8 @@ using namespace std;
 namespace ccoifits
 {
 
-OI_T3::OI_T3(ExtHDU & table, COIFile * parent)
-:	OI_DATA_TABLE(table)
+COI_T3::COI_T3(ExtHDU & table, COIFile * parent)
+:	COI_DATA_TABLE(table)
 {
 	// Verify that we have an OI_VIS2 table
 	if(mTable.name() != "OI_T3")
@@ -26,12 +26,12 @@ OI_T3::OI_T3(ExtHDU & table, COIFile * parent)
 	mParent = parent;
 }
 
-OI_T3::~OI_T3()
+COI_T3::~COI_T3()
 {
 	// TODO Auto-generated destructor stub
 }
 
-OIDataList OI_T3::read()
+OIDataList COI_T3::read()
 {
 	// Read in the common data:
 	vector<int> target_ids;
@@ -40,7 +40,7 @@ OIDataList OI_T3::read()
 	vector<double> int_times;
 	vector< valarray<int> > sta_indicies;
 	vector< valarray<bool> > flags;
-	OI_DATA_TABLE::ReadCommon(target_ids, times, MJDs, int_times, sta_indicies, flags);
+	COI_DATA_TABLE::ReadCommon(target_ids, times, MJDs, int_times, sta_indicies, flags);
 
 	// Now read in the T3-specific columns:
 	int n_rows = mTable.rows();

@@ -5,25 +5,25 @@
  *      Author: bkloppen
  */
 
-#include "OI_ARRAY.h"
+#include "COI_ARRAY.h"
 #include "COIArray.h"
 #include "COIStation.h"
 
 namespace ccoifits
 {
 
-OI_ARRAY::OI_ARRAY(ExtHDU & table)
-: OI_TABLE(table)
+COI_ARRAY::COI_ARRAY(ExtHDU & table)
+: COI_TABLE(table)
 {
 
 }
 
-OI_ARRAY::~OI_ARRAY()
+COI_ARRAY::~COI_ARRAY()
 {
 	// TODO Auto-generated destructor stub
 }
 
-OIArrayPtr OI_ARRAY::read()
+OIArrayPtr COI_ARRAY::read()
 {
 	string array_name = ReadKey<string>("ARRNAME");
 	string frame = ReadKey<string>("FRAME");
@@ -36,7 +36,7 @@ OIArrayPtr OI_ARRAY::read()
 }
 
 
-vector<double> OI_ARRAY::ReadXYZ()
+vector<double> COI_ARRAY::ReadXYZ()
 {
 	// init memory. vector of three elements all set to zero.
 	vector<double> xyz (3, 0);
@@ -49,7 +49,7 @@ vector<double> OI_ARRAY::ReadXYZ()
 }
 
 /// Read in the stations from the OIFITS file.
-vector<OIStationPtr> OI_ARRAY::ReadStations()
+vector<OIStationPtr> COI_ARRAY::ReadStations()
 {
 	vector<OIStationPtr> stations;
 

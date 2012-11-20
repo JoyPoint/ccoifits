@@ -5,10 +5,10 @@
  *      Author: bkloppen
  */
 
-#ifndef OI_TARGET_H_
-#define OI_TARGET_H_
+#ifndef COI_TARGET_H_
+#define COI_TARGET_H_
 
-#include "OI_TABLE.h"
+#include "COI_TABLE.h"
 #include <memory>
 
 using namespace std;
@@ -20,14 +20,14 @@ class COITarget;
 typedef shared_ptr<COITarget> OITargetPtr;
 typedef vector<OITargetPtr> OITargets;
 
-class OI_TARGET : public OI_TABLE
+class COI_TARGET : public COI_TABLE
 {
 public:
-	OI_TARGET(ExtHDU & table);
-	virtual ~OI_TARGET();
+	COI_TARGET(ExtHDU & table);
+	virtual ~COI_TARGET();
 
 	OITargets read();
 };
 
 } /* namespace ccoifits */
-#endif /* OI_TARGET_H_ */
+#endif /* COI_TARGET_H_ */

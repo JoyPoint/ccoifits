@@ -5,27 +5,27 @@
  *      Author: bkloppen
  */
 
-#ifndef OI_VIS2_H_
-#define OI_VIS2_H_
+#ifndef COI_VIS2_H_
+#define COI_VIS2_H_
 
-#include "OI_DATA_TABLE.h"
+#include "COI_DATA_TABLE.h"
 
 namespace ccoifits
 {
 
 class COIFile;
 
-class OI_VIS2: public OI_DATA_TABLE
+class COI_VIS2: public COI_DATA_TABLE
 {
 protected:
 	COIFile * mParent;
 
 public:
-	OI_VIS2(ExtHDU & table, COIFile * parent);
-	virtual ~OI_VIS2();
+	COI_VIS2(ExtHDU & table, COIFile * parent);
+	virtual ~COI_VIS2();
 
 	OIDataList read();
 };
 
 } /* namespace ccoifits */
-#endif /* OI_VIS2_H_ */
+#endif /* COI_VIS2_H_ */

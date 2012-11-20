@@ -47,13 +47,13 @@ OIDataList Bootstrap_Random(const OIDataList & data)
 	// Init the output and random number generator:
 	OIDataList output;
 
-	OIDataList temp = FilterByDataType(data, COIDataRow::OI_VIS);
+	OIDataList temp = FilterByDataType(data, ccoifits::OI_VIS);
 	Bootstrap_Random_Helper(temp, output);
 
-	temp = FilterByDataType(data, COIDataRow::OI_VIS2);
+	temp = FilterByDataType(data, ccoifits::OI_VIS2);
 	Bootstrap_Random_Helper(temp, output);
 
-	temp = FilterByDataType(data, COIDataRow::OI_T3);
+	temp = FilterByDataType(data, ccoifits::OI_T3);
 	Bootstrap_Random_Helper(temp, output);
 
 	return output;
@@ -94,13 +94,13 @@ OIDataList Bootstrap_Spectral(const OIDataList & data)
 {
 	OIDataList output;
 
-	OIDataList temp = FilterByDataType(data, COIDataRow::OI_VIS);
+	OIDataList temp = FilterByDataType(data, ccoifits::OI_VIS);
 	Bootstrap_Spectral_Helper(temp, output);
 
-	temp = FilterByDataType(data, COIDataRow::OI_VIS2);
+	temp = FilterByDataType(data, ccoifits::OI_VIS2);
 	Bootstrap_Spectral_Helper(temp, output);
 
-	temp = FilterByDataType(data, COIDataRow::OI_T3);
+	temp = FilterByDataType(data, ccoifits::OI_T3);
 	Bootstrap_Spectral_Helper(temp, output);
 
 	return output;
@@ -149,9 +149,9 @@ OIDataRowPtr copy(const OIDataRowPtr & row)
 
 //	if(row->GetType() == COIDataRow::OI_VIS)
 //		return OIDataRowPtr( new COIVis(row->get()));
-	if(row->GetType() == COIDataRow::OI_VIS2)
+	if(row->GetType() == ccoifits::OI_VIS2)
 		output.reset( new COIV2Row( dynamic_cast<COIV2Row*>(row.get()) ) );
-	else if(row->GetType() == COIDataRow::OI_T3)
+	else if(row->GetType() == ccoifits::OI_T3)
 		output.reset( new COIT3Row( dynamic_cast<COIT3Row*>(row.get()) ) );
 
 	return output;

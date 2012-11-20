@@ -5,25 +5,25 @@
  *      Author: bkloppen
  */
 
-#include "OI_WAVELENGTH.h"
+#include "COI_WAVELENGTH.h"
 #include "COIWavelength.h"
 
 namespace ccoifits
 {
 
-OI_WAVELENGTH::OI_WAVELENGTH(ExtHDU & table)
-: OI_TABLE(table)
+COI_WAVELENGTH::COI_WAVELENGTH(ExtHDU & table)
+: COI_TABLE(table)
 {
 	// TODO Auto-generated constructor stub
 
 }
 
-OI_WAVELENGTH::~OI_WAVELENGTH()
+COI_WAVELENGTH::~COI_WAVELENGTH()
 {
 	// TODO Auto-generated destructor stub
 }
 
-OIWavelengthPtr OI_WAVELENGTH::read()
+OIWavelengthPtr COI_WAVELENGTH::read()
 {
 	string insname = ReadKey<string>("INSNAME");
 	vector<double> eff_wave = ReadColumn<double>("EFF_WAVE");

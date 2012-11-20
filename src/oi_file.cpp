@@ -6,17 +6,17 @@
  */
 
 #include "oi_file.hpp"
-#include "OI_TARGET.h"
+#include "COI_TARGET.h"
 #include "COITarget.h"
-#include "OI_ARRAY.h"
+#include "COI_ARRAY.h"
 #include "COIArray.h"
-#include "OI_WAVELENGTH.h"
+#include "COI_WAVELENGTH.h"
 #include "COIWavelength.h"
-#include "OI_DATA_TABLE.h"
+#include "COI_DATA_TABLE.h"
 #include "COIDataRow.h"
-#include "OI_VIS2.h"
+#include "COI_VIS2.h"
 #include "COIV2Row.h"
-#include "OI_T3.h"
+#include "COI_T3.h"
 #include "COIT3Row.h"
 
 namespace ccoifits
@@ -92,7 +92,7 @@ OIDataList COIFile::read()
 
 	// Read all targets, store in a map<int, OITargetPtr>
 	table = &mOIFITS->extension("OI_TARGET");
-	OI_TARGET oi_target = OI_TARGET(*table);
+	COI_TARGET oi_target = COI_TARGET(*table);
 	vector<OITargetPtr> targets = oi_target.read();
 	for(auto it = targets.begin(); it < targets.end(); ++it)
 		mTargets[(*it)->GetID()] = (*it);
@@ -103,7 +103,7 @@ OIDataList COIFile::read()
 	{
 		// Read in the ith plus one entry (CCFits convention here).
 		table = &mOIFITS->extension("OI_ARRAY", i+1);
-		OI_ARRAY oi_array = OI_ARRAY(*table);
+		COI_ARRAY oi_array = COI_ARRAY(*table);
 		OIArrayPtr tmp = oi_array.read();
 		mArrays[tmp->GetName()] = tmp;
 	}
@@ -115,7 +115,7 @@ OIDataList COIFile::read()
 	{
 		// Read in the ith plus one entry (CCFits convention here).
 		table = &mOIFITS->extension("OI_WAVELENGTH", i+1);
-		OI_WAVELENGTH oi_wave = OI_WAVELENGTH(*table);
+		COI_WAVELENGTH oi_wave = COI_WAVELENGTH(*table);
 		OIWavelengthPtr tmp = oi_wave.read();
 		mWaves[tmp->GetName()] = tmp;
 
@@ -132,7 +132,7 @@ OIDataList COIFile::read()
 	for(int i = 0; i < n_tables; i++)
 	{
 		table = &mOIFITS->extension("OI_VIS2", i+1);
-		OI_VIS2 oi_vis2 = OI_VIS2(*table, this);
+		COI_VIS2 oi_vis2 = COI_VIS2(*table, this);
 		OIDataList tmp = oi_vis2.read();
 		data.insert(data.end(), tmp.begin(), tmp.end());
 	}
@@ -142,7 +142,7 @@ OIDataList COIFile::read()
 	for(int i = 0; i < n_tables; i++)
 	{
 		table = &mOIFITS->extension("OI_T3", i+1);
-		OI_T3 oi_t3 = OI_T3(*table, this);
+		COI_T3 oi_t3 = COI_T3(*table, this);
 		OIDataList tmp = oi_t3.read();
 		data.insert(data.end(), tmp.begin(), tmp.end());
 	}

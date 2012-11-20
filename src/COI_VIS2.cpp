@@ -5,15 +5,15 @@
  *      Author: bkloppen
  */
 
-#include "OI_VIS2.h"
+#include "COI_VIS2.h"
 #include "COIV2Row.h"
 #include "oi_file.hpp"
 
 namespace ccoifits
 {
 
-OI_VIS2::OI_VIS2(ExtHDU & table, COIFile * parent)
-:	OI_DATA_TABLE(table)
+COI_VIS2::COI_VIS2(ExtHDU & table, COIFile * parent)
+:	COI_DATA_TABLE(table)
 {
 	// Verify that we have an OI_VIS2 table
 	if(mTable.name() != "OI_VIS2")
@@ -22,12 +22,12 @@ OI_VIS2::OI_VIS2(ExtHDU & table, COIFile * parent)
 	mParent = parent;
 }
 
-OI_VIS2::~OI_VIS2()
+COI_VIS2::~COI_VIS2()
 {
 	// TODO Auto-generated destructor stub
 }
 
-OIDataList OI_VIS2::read()
+OIDataList COI_VIS2::read()
 {
 	// Read in the common data:
 	vector<int> target_ids;
@@ -36,7 +36,7 @@ OIDataList OI_VIS2::read()
 	vector<double> int_times;
 	vector< valarray<int> > sta_indicies;
 	vector< valarray<bool> > flags;
-	OI_DATA_TABLE::ReadCommon(target_ids, times, MJDs, int_times, sta_indicies, flags);
+	COI_DATA_TABLE::ReadCommon(target_ids, times, MJDs, int_times, sta_indicies, flags);
 
 	// Now read in the V2-specific columns:
 	int n_rows = mTable.rows();

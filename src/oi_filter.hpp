@@ -31,16 +31,22 @@
 #define OIFILTER_H_
 
 #include <vector>
-#include "COIDataRow.h"
+#include <memory>
+
+#include "oi_file.hpp"
 
 using namespace std;
 
 namespace ccoifits
 {
 
+class COIDataRow;
+typedef shared_ptr<COIDataRow> OIDataRowPtr;
+typedef vector<OIDataRowPtr> OIDataList;
+
 OIDataList FilterByArrayName(const OIDataList & data, string array_name);
 OIDataList FilterByCombinerName(const OIDataList & data, string combiner_name);
-OIDataList FilterByDataType(const OIDataList & data, COIDataRow::DataTypes type);
+OIDataList FilterByDataType(const OIDataList & data, ccoifits::DataTypes type);
 void FilterByDataType(const OIDataList & data, OIDataList & vis_rows, OIDataList & v2_rows, OIDataList & t3_rows);
 OIDataList FilterByObjectCoords(const OIDataList & data, double ra, double dec, double search_radius);
 OIDataList FilterByObjectName(const OIDataList & data, string object_name);

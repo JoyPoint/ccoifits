@@ -6,6 +6,7 @@
  */
 
 #include "oi_filter.hpp"
+#include "COIDataRow.h"
 
 namespace ccoifits
 {
@@ -40,7 +41,7 @@ OIDataList FilterByCombinerName(const OIDataList & data, string combiner_name)
 
 /// Returns a vector of OIDataPtr which have the specified data type
 /// Operation is O(data.size())
-OIDataList FilterByDataType(const OIDataList & data, COIDataRow::DataTypes type)
+OIDataList FilterByDataType(const OIDataList & data, ccoifits::DataTypes type)
 {
 	OIDataList output;
 
@@ -60,11 +61,11 @@ void FilterByDataType(const OIDataList & data, OIDataList & vis_rows, OIDataList
 	// First split the data into three sublists:
 	for(auto row: data)
 	{
-		if(row->GetType() == COIDataRow::OI_VIS)
+		if(row->GetType() == ccoifits::OI_VIS)
 			vis_rows.push_back(row);
-		else if(row->GetType() == COIDataRow::OI_VIS2)
+		else if(row->GetType() == ccoifits::OI_VIS2)
 			v2_rows.push_back(row);
-		else if(row->GetType() == COIDataRow::OI_T3)
+		else if(row->GetType() == ccoifits::OI_T3)
 			t3_rows.push_back(row);
 	}
 }

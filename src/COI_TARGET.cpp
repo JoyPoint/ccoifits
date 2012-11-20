@@ -5,26 +5,26 @@
  *      Author: bkloppen
  */
 
-#include "OI_TARGET.h"
+#include "COI_TARGET.h"
 #include "COITarget.h"
 
 namespace ccoifits
 {
 
-OI_TARGET::OI_TARGET(ExtHDU & table)
-: OI_TABLE(table)
+COI_TARGET::COI_TARGET(ExtHDU & table)
+: COI_TABLE(table)
 {
 	// TODO Auto-generated constructor stub
 
 }
 
-OI_TARGET::~OI_TARGET()
+COI_TARGET::~COI_TARGET()
 {
 	// TODO Auto-generated destructor stub
 }
 
 /// Reads in the target table inside of an OIFITS file.
-OITargets OI_TARGET::read()
+OITargets COI_TARGET::read()
 {
 	// First read in all of the columns in the target table.
 	// All columns are mandatory and should be free of exception errors.
