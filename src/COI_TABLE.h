@@ -17,6 +17,7 @@
 #include <valarray>
 #include <memory>
 #include <CCfits>
+#include <utility>
 
 using namespace std;
 using namespace CCfits;

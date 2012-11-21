@@ -11,7 +11,7 @@ namespace ccoifits
 {
 
 COIT3Row::COIT3Row(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength, double time, double mjd, double int_time, valarray<int> sta_index,
-		valarray<bool> flag, OIUVPtr uv12, OIUVPtr uv23, valarray<complex<double>> data, valarray<complex<double>> data_err)
+		valarray<bool> flag, OIUVPtr uv12, OIUVPtr uv23, valarray<complex<double>> data, valarray<pair<double,double>> data_err)
 : COIDataRow(target, array, wavelength, time, mjd, int_time, sta_index, flag)
 {
 	mType = DataTypes::OI_T3;
@@ -47,7 +47,7 @@ valarray<complex<double>> COIT3Row::GetMaskedData()
 	return ApplyMask(flag, t3_data);
 }
 
-valarray<complex<double>> COIT3Row::GetMaskedDataError()
+valarray<pair<double,double>> COIT3Row::GetMaskedDataError()
 {
 	return ApplyMask(flag, t3_data_err);
 }
@@ -59,7 +59,7 @@ valarray<complex<double>> COIT3Row::GetRawData()
 }
 
 /// Returns the raw data error stored in an OIT3Row without any application of a mask.
-valarray<complex<double>> COIT3Row::GetRawDataError()
+valarray<pair<double,double>> COIT3Row::GetRawDataError()
 {
 	return t3_data_err;
 }

@@ -14,6 +14,8 @@
 #include "COIWavelength.h"
 #include "COI_DATA_TABLE.h"
 #include "COIDataRow.h"
+#include "COI_VIS.h"
+#include "COIVisRow.h"
 #include "COI_VIS2.h"
 #include "COIV2Row.h"
 #include "COI_T3.h"
@@ -118,7 +120,6 @@ OIDataList COIFile::read()
 		COI_WAVELENGTH oi_wave = COI_WAVELENGTH(*table);
 		OIWavelengthPtr tmp = oi_wave.read();
 		mWaves[tmp->GetName()] = tmp;
-
 	}
 
 	// Now read in all OI_VIS, OI_VIS2, OI_T3 tables, associating the data with
@@ -126,6 +127,14 @@ OIDataList COIFile::read()
 	// operation in a vector<OIDataList> which we return from this function
 
 	// First all OI_VIS records:
+	n_tables = ext.count("OI_VIS");
+	for(int i = 0; i < n_tables; i++)
+	{
+		table = &mOIFITS->extension("OI_VIS", i+1);
+		COI_VIS oi_vis = COI_VIS(*table, this);
+		OIDataList tmp = oi_vis.read();
+		data.insert(data.end(), tmp.begin(), tmp.end());
+	}
 
 	// Second, OI_VIS2 records:
 	n_tables = ext.count("OI_VIS2");

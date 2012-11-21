@@ -32,7 +32,7 @@ namespace ccoifits
 void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_points,
 		valarray<complex<double>> & vis, valarray<complex<double>> & vis_err, vector<unsigned int> & vis_uv_ref,
 		valarray<double> & vis2, valarray<double> & vis2_err, vector<unsigned int> & vis2_uv_ref,
-		valarray<complex<double>> & t3, valarray<complex<double>> & t3_err,
+		valarray<complex<double>> & t3, valarray<pair<double,double>> & t3_err,
 		vector<tuple<unsigned int, unsigned int, unsigned int>> & t3_uv_ref,
 		vector<tuple<short, short, short>> & t3_uv_sign)
 {
@@ -62,19 +62,19 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 	// change in size.
 //	cout << "Tree Size " << uv_tree.size() << endl;
 //	cout << "Inserting OI_VIS records" << endl;
-//	Export_MinUV(uv_tree, t_vis, t_vis_ref, vis, vis_err);
+//	Export_MinUV_Vis(uv_tree, t_vis, t_vis_ref, vis, vis_err);
 //	cout << "N(Vis) " << t_vis.size() << endl;
 //	cout << "Vis uv_ref size " << t_vis_ref.size() << endl;
 //	cout << "Tree Size " << uv_tree.size() << endl;
 
 //	cout << "Inserting OI_VIS2 records" << endl;
-	Export_MinUV(uv_tree, t_vis2, t_v2_ref, vis2, vis2_err);
+	Export_MinUV_V2(uv_tree, t_vis2, t_v2_ref, vis2, vis2_err);
 //	cout << "N(V2) " << t_vis2.size() << endl;
 //	cout << "V2 uv_ref size " << t_v2_ref.size() << endl;
 //	cout << "Tree Size " << uv_tree.size() << endl;
 
 //	cout << "Inserting OI_T3 records" << endl;
-	Export_MinUV(uv_tree, t_t3, t_t3_ref, t3, t3_err, t3_uv_sign);
+	Export_MinUV_T3(uv_tree, t_t3, t_t3_ref, t3, t3_err, t3_uv_sign);
 //	cout << "N(T3) " << t_t3.size() << endl;
 //	cout << "T3 uv_ref size (1/3 total T3 records)" << t_t3_ref.size() << endl;
 //	cout << "Tree Size " << uv_tree.size() << endl;
@@ -96,7 +96,7 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 }
 
 /// A helper function for exporting data. Specialized for COIV2Row records
-void Export_MinUV(UVKDTree & uv_tree, const OIDataList & data_list, vector<node_ptr> & uv_points, valarray<double> & data, valarray<double> & data_err)
+void Export_MinUV_V2(UVKDTree & uv_tree, const OIDataList & data_list, vector<node_ptr> & uv_points, valarray<double> & data, valarray<double> & data_err)
 {
 	OIDataRowPtr row;
 	COIV2Row * vis2_row;
@@ -143,8 +143,8 @@ void Export_MinUV(UVKDTree & uv_tree, const OIDataList & data_list, vector<node_
 }
 
 /// A helper function for exporting data. Specialized for COIT3DataRow records.
-void Export_MinUV(UVKDTree & uv_tree, const OIDataList & data_list, vector<tuple<node_ptr, node_ptr, node_ptr> > & uv_refs,
-		valarray<complex<double>> & data, valarray<complex<double>> & data_err,
+void Export_MinUV_T3(UVKDTree & uv_tree, const OIDataList & data_list, vector<tuple<node_ptr, node_ptr, node_ptr> > & uv_refs,
+		valarray<complex<double>> & data, valarray<pair<double,double>> & data_err,
 		vector<tuple<short, short, short>> & uv_sign)
 {
 	OIDataRowPtr row;
@@ -223,7 +223,7 @@ void Export_MinUV(UVKDTree & uv_tree, const OIDataList & data_list, vector<tuple
 void Export_Direct(const OIDataList & data, vector<pair<double,double> > & uv_points,
 		valarray<complex<double>> & vis, valarray<complex<double>> & vis_err,
 		valarray<double> & vis2, valarray<double> & vis2_err,
-		valarray<complex<double>> & t3, valarray<complex<double>> & t3_err)
+		valarray<complex<double>> & t3, valarray<pair<double,double>> & t3_err)
 {
 	// First split data into three sublists:
 	OIDataList t_vis;
@@ -232,12 +232,12 @@ void Export_Direct(const OIDataList & data, vector<pair<double,double> > & uv_po
 	FilterByDataType(data, t_vis, t_vis2, t_t3);
 
 //	DirectExport(t_vis, uv_points, vis, vis_err);
-	Export_Direct(t_vis2, uv_points, vis2, vis2_err);
-	Export_Direct(t_t3, uv_points, t3, t3_err);
+	Export_Direct_V2(t_vis2, uv_points, vis2, vis2_err);
+	Export_Direct_T3(t_t3, uv_points, t3, t3_err);
 }
 
 /// A helper function for exporting data. Specialized for COIV2Row records
-void Export_Direct(const OIDataList & data_list, vector<pair<double,double> > & uv_points, valarray<double> & data, valarray<double> & data_err)
+void Export_Direct_V2(const OIDataList & data_list, vector<pair<double,double> > & uv_points, valarray<double> & data, valarray<double> & data_err)
 {
 	OIDataRowPtr row;
 	COIV2Row * vis2_row;
@@ -282,7 +282,7 @@ void Export_Direct(const OIDataList & data_list, vector<pair<double,double> > & 
 }
 
 /// A helper function for exporting data. Specialized for COIT3DataRow and COIVisDataRow records.
-void Export_Direct(const OIDataList & data_list, vector<pair<double,double> > & uv_points, valarray<complex<double>> & data, valarray<complex<double>> & data_err)
+void Export_Direct_T3(const OIDataList & data_list, vector<pair<double,double> > & uv_points, valarray<complex<double>> & data, valarray<pair<double,double>> & data_err)
 {
 	OIDataRowPtr row;
 //	COIVisRow * vis_row;

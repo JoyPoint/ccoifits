@@ -13,6 +13,11 @@
 
 using namespace std;
 
+#ifndef PI
+#include <cmath>
+#define PI M_PI
+#endif // PI
+
 namespace ccoifits
 {
 
@@ -51,18 +56,20 @@ OIDataList COI_T3::read()
 
 	// Copy the data into valarrays of complex doubles for storage in the COIT3Row class;
 	vector< valarray< complex<double> > > data;
-	vector< valarray< complex<double> > > data_err;
+	vector< valarray< pair<double,double> > > data_err;
 
 	int n_cols = 0;
 	if(n_rows > 0)	// This could be false if someone created a OI_T3 table with no data in it.
 		n_cols = t3_amp[0].size();
 
 	// Now copy the data into complex data fields
+	double real = 0;
+	double imag = 0;
 	for(int i = 0; i < n_rows; i++)
 	{
 		// Create a new valarray to store the data values:
 		valarray< complex<double> > temp(n_cols);
-		valarray< complex<double> > temp_err(n_cols);
+		valarray< pair<double,double> > temp_err(n_cols);
 
 		// Fill in the data
 		for(int j = 0; j < n_cols; j++)
@@ -72,14 +79,19 @@ OIDataList COI_T3::read()
 			// error to infinity.
 			if(std::isnan(t3_amp[i][j]))
 			{
-				temp[j] = complex<double>(1.0, t3_phi[i][j]);
-				temp_err[j] = complex<double>(numeric_limits<double>::max(), t3_phi_err[i][j]);
+				// Set T3 amp = 1, use phase only.
+				real = cos(t3_phi[i][j] * PI/180);
+				imag = sin(t3_phi[i][j] * PI/180);
+				temp[j] = complex<double>(real, imag);
+				temp_err[j] = pair<double,double>(numeric_limits<double>::max(), t3_phi_err[i][j] * PI/180);
 
 			}
 			else
 			{
-				temp[j] = complex<double>(t3_amp[i][j], t3_phi[i][j]);
-				temp_err[j] = complex<double>(t3_amp_err[i][j], t3_phi_err[i][j]);
+				real = t3_amp[i][j] * cos(t3_phi[i][j] * PI/180);
+				imag = t3_amp[i][j] * sin(t3_phi[i][j] * PI/180);
+				temp[j] = complex<double>(real, imag);
+				temp_err[j] = pair<double,double>(t3_amp_err[i][j], t3_phi_err[i][j]);
 			}
 		}
 
