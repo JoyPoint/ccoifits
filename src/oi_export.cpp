@@ -30,7 +30,7 @@ namespace ccoifits
 /// To find the uv point of
 
 void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_points,
-		valarray<complex<double>> & vis, valarray<complex<double>> & vis_err, vector<unsigned int> & vis_uv_ref,
+		valarray<complex<double>> & vis, valarray<pair<double,double> > & vis_err, vector<unsigned int> & vis_uv_ref,
 		valarray<double> & vis2, valarray<double> & vis2_err, vector<unsigned int> & vis2_uv_ref,
 		valarray<complex<double>> & t3, valarray<pair<double,double>> & t3_err,
 		vector<tuple<unsigned int, unsigned int, unsigned int>> & t3_uv_ref,
@@ -221,7 +221,7 @@ void Export_MinUV_T3(UVKDTree & uv_tree, const OIDataList & data_list, vector<tu
 /// All data that is not flagged will be exported. uv_points is not simplified
 /// or intelligently filtered in any way.
 void Export_Direct(const OIDataList & data, vector<pair<double,double> > & uv_points,
-		valarray<complex<double>> & vis, valarray<complex<double>> & vis_err,
+		valarray<complex<double>> & vis, valarray<pair<double,double> > & vis_err,
 		valarray<double> & vis2, valarray<double> & vis2_err,
 		valarray<complex<double>> & t3, valarray<pair<double,double>> & t3_err)
 {
