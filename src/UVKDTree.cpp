@@ -25,8 +25,8 @@ void UVKDTree::AssignIndicies()
 
 void UVKDTree::AssignIndicies(node_ptr & node, unsigned int & node_index)
 {
-	node_index += 1;
 	node->index = node_index;
+	node_index += 1;
 
 	if(node->left_child != NULL)
 		AssignIndicies(node->left_child, node_index);
