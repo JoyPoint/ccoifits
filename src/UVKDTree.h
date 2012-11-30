@@ -28,8 +28,9 @@ typedef shared_ptr<kd_uv_node> node_ptr;
 // A representation of a UV point.  uv_point.first === u, uv_point.second === v
 typedef pair<double,double> uv_point;
 
-struct kd_uv_node
+class kd_uv_node
 {
+public:
 	unsigned int index;
 	uv_point uv;
 	node_ptr left_child;
@@ -54,10 +55,10 @@ public:
 	vector<pair<double,double> > Flatten();
 	static vector<pair<double, double>> Flatten(node_ptr & node, vector<pair<double,double>> & output);
 
-	node_ptr FindUV(const uv_point & uv);
-	node_ptr FindUV(const uv_point & uv, bool insert_on_fail);
+	node_ptr FindUV(uv_point uv);
+	node_ptr FindUV(uv_point uv, bool insert_on_fail);
 protected:
-	node_ptr FindUV(const uv_point & uv, node_ptr & node, unsigned int depth, bool insert_on_fail);
+	node_ptr FindUV(uv_point uv, node_ptr & node, unsigned int depth, bool insert_on_fail);
 	node_ptr Insert(uv_point & uv);
 	static node_ptr Insert(const uv_point & uv, node_ptr & node, unsigned int depth);
 

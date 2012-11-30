@@ -86,12 +86,12 @@ bool UVKDTree::compare_uv(const uv_point & uv1, const uv_point & uv2)
 	return false;
 }
 
-node_ptr UVKDTree::FindUV(const uv_point & uv)
+node_ptr UVKDTree::FindUV(uv_point uv)
 {
 	return FindUV(uv, this->root, 0, false);
 }
 
-node_ptr UVKDTree::FindUV(const uv_point & uv, bool insert_on_fail)
+node_ptr UVKDTree::FindUV(uv_point uv, bool insert_on_fail)
 {
 	return FindUV(uv, this->root, 0, insert_on_fail);
 }
@@ -99,9 +99,16 @@ node_ptr UVKDTree::FindUV(const uv_point & uv, bool insert_on_fail)
 /// Attempts to find uv_point in the tree.
 /// If no node is found and insert_on_fail is false, the function will return an empty node_ptr;
 /// If no node is found and insert_on_fail is true, a new node for uv will be created and returned.
-node_ptr UVKDTree::FindUV(const uv_point & uv, node_ptr & node, unsigned int depth, bool insert_on_fail)
+node_ptr UVKDTree::FindUV(uv_point uv, node_ptr & node, unsigned int depth, bool insert_on_fail)
 {
-	if(compare_uv(uv, node->uv));
+	// We enforce that the tree has all positive uv.first values, conjugate if necessary.
+	if(uv.first < 0)
+	{
+		uv.first *= -1;
+		uv.second *= -1;
+	}
+
+	if(compare_uv(uv, node->uv))
 		return node;
 
 	// Switch between comparing u and v depending on the depth:

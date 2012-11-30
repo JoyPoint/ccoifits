@@ -66,7 +66,7 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 //	cout << "N(Vis) " << t_vis.size() << endl;
 //	cout << "Vis uv_ref size " << t_vis_ref.size() << endl;
 //	cout << "Tree Size " << uv_tree.size() << endl;
-
+//
 //	cout << "Inserting OI_VIS2 records" << endl;
 	Export_MinUV_V2(uv_tree, t_vis2, t_v2_ref, vis2, vis2_err);
 //	cout << "N(V2) " << t_vis2.size() << endl;
