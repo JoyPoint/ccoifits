@@ -26,9 +26,6 @@ namespace ccoifits
 
 /// Directly exports all data contained in data to the output valarrays and attempts to minimize the
 /// total number of UV points in the data set.
-///
-/// To find the uv point of
-
 void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_points,
 		valarray<complex<double>> & vis, valarray<pair<double,double> > & vis_err, vector<unsigned int> & vis_uv_ref,
 		valarray<double> & vis2, valarray<double> & vis2_err, vector<unsigned int> & vis2_uv_ref,
@@ -36,6 +33,11 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 		vector<tuple<unsigned int, unsigned int, unsigned int>> & t3_uv_ref,
 		vector<tuple<short, short, short>> & t3_uv_sign)
 {
+	// To minimize the number of UV points, we first insert the UV points into a KD-tree. To avoid
+	// unnecessary parsing, we build the initial tree with only UV points from Vis, V2, or T3 data.
+	// We then find the UV points for the Vis, V2, and T3 data, keeping track of sign changes
+	// whenever necessary.
+
 	// First split data into three sublists:
 	OIDataList t_vis;
 	OIDataList t_vis2;
@@ -185,6 +187,8 @@ void Export_MinUV_T3(UVKDTree & uv_tree, const OIDataList & data_list, vector<tu
 
 				scaled_uv = uv->GetScaledPair(wavelength);
 
+				// As the KD tree enforces U > 0, we can assign
+				// sign like this.
 				if(scaled_uv.first < 0)
 				{
 					scaled_uv.first *= -1;
