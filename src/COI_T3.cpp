@@ -91,7 +91,7 @@ OIDataList COI_T3::read()
 				real = t3_amp[i][j] * cos(t3_phi[i][j] * PI/180);
 				imag = t3_amp[i][j] * sin(t3_phi[i][j] * PI/180);
 				temp[j] = complex<double>(real, imag);
-				temp_err[j] = pair<double,double>(t3_amp_err[i][j], t3_phi_err[i][j]);
+				temp_err[j] = pair<double,double>(t3_amp_err[i][j], t3_phi_err[i][j]  * PI/180);
 			}
 		}
 
