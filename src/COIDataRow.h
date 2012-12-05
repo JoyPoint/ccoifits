@@ -87,6 +87,8 @@ public:
 
 	virtual ~COIDataRow();
 
+	static unsigned int ComputeMasked(const valarray<bool> & flags);
+
 	double DistanceTo(double ra, double dec);
 
 	string GetArrayName();
@@ -116,7 +118,7 @@ public:
 		assert(mask.size() == data.size());
 
 		// Determine how many elements are active in the mask and create a storage array
-		unsigned int n_active = mask.size() - mask.sum();
+		unsigned int n_active = mask.size() - ComputeMasked(mask);
 		T output(n_active);
 
 		// iterate over the elements, i, of data

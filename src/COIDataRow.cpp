@@ -49,6 +49,17 @@ COIDataRow::~COIDataRow()
 	// TODO Auto-generated destructor stub
 }
 
+unsigned int COIDataRow::ComputeMasked(const valarray<bool> & flags)
+{
+	unsigned int flag_sum = 0;
+	for(int i = 0; i < flags.size(); i++)
+	{
+		if(flags[i]) flag_sum += 1;
+	}
+
+	return flag_sum;
+}
+
 /// Returns the distance between the object to which this data refers and the given coordinates.
 /// If this object is not associated with a target, positive infinity is returned.
 double COIDataRow::DistanceTo(double ra, double dec)
@@ -82,7 +93,9 @@ string COIDataRow::GetCombinerName()
 /// Returns the total number of data points that are not masked by flags.
 unsigned int COIDataRow::GetMaskedNData()
 {
-	return GetRawNData() - flag.sum();
+	unsigned int flag_sum = ComputeMasked(flag);
+
+	return GetRawNData() - flag_sum;
 }
 
 vector<double> COIDataRow::GetMaskedWavelengths()
