@@ -93,9 +93,7 @@ string COIDataRow::GetCombinerName()
 /// Returns the total number of data points that are not masked by flags.
 unsigned int COIDataRow::GetMaskedNData()
 {
-	unsigned int flag_sum = ComputeMasked(flag);
-
-	return GetRawNData() - flag_sum;
+	return GetRawNData() - ComputeMasked(flag);
 }
 
 vector<double> COIDataRow::GetMaskedWavelengths()

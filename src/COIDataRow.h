@@ -117,6 +117,8 @@ public:
 		// Mask and data must have the same size.
 		assert(mask.size() == data.size());
 
+		unsigned int temp = ComputeMasked(mask);
+
 		// Determine how many elements are active in the mask and create a storage array
 		unsigned int n_active = mask.size() - ComputeMasked(mask);
 		T output(n_active);
