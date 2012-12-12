@@ -8,12 +8,11 @@
 find_package(CFITSIO REQUIRED)
 
 FIND_LIBRARY(CCFITS_LIBRARY 
-    NAMES libCCfits.so libCCfits.a
+    NAMES libCCfits.so libCCfits.a libCCfits.dylib libCCfits.la
     DOC "CCFITS library.")
 
 FIND_PATH(CCFITS_INCLUDE_DIR 
-    NAMES CCfits.h
-    HINTS /usr/include/CCfits
+    NAMES CCfits/CCfits.h
     DOC "CCOIFITS include directory.")
 
 set(CCFITS_LIBRARIES ${CCFITS_LIBRARY} ${CFITSIO_LIBRARY})
