@@ -21,6 +21,8 @@
 #include "COI_T3.h"
 #include "COIT3Row.h"
 
+#include <string>
+
 namespace ccoifits
 {
 
@@ -126,11 +128,25 @@ OIDataList COIFile::read()
 	// the corresponding shared pointers from above. Store the results of this
 	// operation in a vector<OIDataList> which we return from this function
 
+	// TODO: The clunky form of iterating over tables within the OIFITS file can probably
+	// be fixed using multimap::equal_range. But I'm not sure how to do this within CCFits
+	// data formats.
+
 	// First all OI_VIS records:
 	n_tables = ext.count("OI_VIS");
 	for(int i = 0; i < n_tables; i++)
 	{
-		table = &mOIFITS->extension("OI_VIS", i+1);
+		// It is possible that the EXTVER may not be the next integer increment
+		// so we'll try and catch NoSuchHDU exceptions
+		try
+		{
+			table = &mOIFITS->extension("OI_VIS", i+1);
+		}
+		catch(CCfits::FITS::NoSuchHDU & e)
+		{
+			n_tables += 1;
+			continue;
+		}
 		COI_VIS oi_vis = COI_VIS(*table, this);
 		OIDataList tmp = oi_vis.read();
 		data.insert(data.end(), tmp.begin(), tmp.end());
@@ -140,7 +156,16 @@ OIDataList COIFile::read()
 	n_tables = ext.count("OI_VIS2");
 	for(int i = 0; i < n_tables; i++)
 	{
-		table = &mOIFITS->extension("OI_VIS2", i+1);
+		try
+		{
+			table = &mOIFITS->extension("OI_VIS2", i+1);
+		}
+		catch(CCfits::FITS::NoSuchHDU & e)
+		{
+			n_tables += 1;
+			continue;
+		}
+
 		COI_VIS2 oi_vis2 = COI_VIS2(*table, this);
 		OIDataList tmp = oi_vis2.read();
 		data.insert(data.end(), tmp.begin(), tmp.end());
@@ -150,7 +175,15 @@ OIDataList COIFile::read()
 	n_tables = ext.count("OI_T3");
 	for(int i = 0; i < n_tables; i++)
 	{
-		table = &mOIFITS->extension("OI_T3", i+1);
+		try
+		{
+			table = &mOIFITS->extension("OI_T3", i+1);
+		}
+		catch(CCfits::FITS::NoSuchHDU & e)
+		{
+			n_tables += 1;
+			continue;
+		}
 		COI_T3 oi_t3 = COI_T3(*table, this);
 		OIDataList tmp = oi_t3.read();
 		data.insert(data.end(), tmp.begin(), tmp.end());
