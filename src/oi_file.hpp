@@ -8,7 +8,7 @@
 #ifndef COIFILE_H_
 #define COIFILE_H_
 
-#include <CCfits>
+#include <CCfits/CCfits>
 #include <memory>
 #include <vector>
 #include <map>
