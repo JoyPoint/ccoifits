@@ -9,6 +9,9 @@
 #include "COIVisRow.h"
 #include "oi_file.hpp"
 
+#include <stdexcept>
+using namespace std;
+
 #ifndef PI
 #include <cmath>
 #define PI M_PI
@@ -22,7 +25,7 @@ COI_VIS::COI_VIS(ExtHDU & table, COIFile * parent)
 {
 	// Verify that we have an OI_VIS2 table
 	if(mTable.name() != "OI_VIS")
-		throw;
+		throw runtime_error("Attempted to construct an OI_VIS table from a non-OI_VIS HDU.");
 
 	mParent = parent;
 }

@@ -10,6 +10,7 @@
 #include "oi_file.hpp"
 
 #include <limits>
+#include <stdexcept>
 
 using namespace std;
 
@@ -26,7 +27,7 @@ COI_T3::COI_T3(ExtHDU & table, COIFile * parent)
 {
 	// Verify that we have an OI_VIS2 table
 	if(mTable.name() != "OI_T3")
-		throw;
+		throw runtime_error("Attempted to construct an OI_T3 table from a non-OI_T3 HDU.");
 
 	mParent = parent;
 }

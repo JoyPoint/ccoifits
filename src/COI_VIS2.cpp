@@ -9,6 +9,9 @@
 #include "COIV2Row.h"
 #include "oi_file.hpp"
 
+#include <stdexcept>
+using namespace std;
+
 namespace ccoifits
 {
 
@@ -17,7 +20,7 @@ COI_VIS2::COI_VIS2(ExtHDU & table, COIFile * parent)
 {
 	// Verify that we have an OI_VIS2 table
 	if(mTable.name() != "OI_VIS2")
-		throw;
+		throw runtime_error("Attempted to construct an OI_VIS2 table from a non-OI_VIS2 HDU.");
 
 	mParent = parent;
 }

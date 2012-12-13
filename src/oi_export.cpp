@@ -10,6 +10,7 @@
 #include <vector>
 #include <complex>
 #include <valarray>
+#include <stdexcept>
 
 #include "COIDataRow.h"
 #include "COIV2Row.h"
@@ -57,7 +58,7 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 	else if(t_t3.size() > 0)
 		uv_tree.BuildTree(t_t3);
 	else
-		throw "ccoifits::Export_MinUV: No data found!";
+		throw runtime_error("ccoifits::Export_MinUV: No data found!");
 
 	// We should now have a nearly balanced tree of UV points.  Now lets start exporting data.
 	// In the ideal case where every T3/V2 has a matching V2/Vis record, the tree should not

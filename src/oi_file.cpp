@@ -22,6 +22,7 @@
 #include "COIT3Row.h"
 
 #include <string>
+#include <stdexcept>
 
 namespace ccoifits
 {
@@ -67,7 +68,14 @@ OITargetPtr COIFile::GetTarget(int target_id)
 void COIFile::open(string filename)
 {
 	// Open the file
-	open(filename, Read);
+	try
+	{
+		open(filename, Read);
+	}
+	catch(CCfits::FITS::CantOpen & e)
+	{
+		throw runtime_error("Cannot find FITS file" + filename);
+	}
 }
 
 /// Opens an OIFITS file.
@@ -92,7 +100,7 @@ OIDataList COIFile::read()
 	// First verify that there is an OI_TARGET table in the file, if not exit immediately.
 	n_tables = ext.count("OI_TARGET");
 	if(n_tables == 0)
-		throw "No OI_TARGET found in file.";
+		throw runtime_error("No OI_TARGET found in file.");
 
 	// Read all targets, store in a map<int, OITargetPtr>
 	table = &mOIFITS->extension("OI_TARGET");
