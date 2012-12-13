@@ -28,10 +28,10 @@ int main(int argc, char *argv[])
 {
 	// Find the path to the current executable
 	string exe = FindExecutable();
-	// Find the directory (the name of this program is "ccoifits_tests", so just strip off 14 characters)
-	string path = exe.substr(0, exe.size() - 18);
+	size_t folder_end = exe.find_last_of("/\\");
+	string exe_path = exe.substr(0,folder_end+1);
 
-	string file = path + "../samples/UDD-2_5mas_nonoise.oifits";
+	string file = exe_path + "../samples/UDD-2_5mas_nonoise.oifits";
 
 	COIFile tmp;
 	try
