@@ -15,9 +15,9 @@ file(GLOB MAIN_FILES main.cpp)
 list(REMOVE_ITEM CCOIFITS_SOURCE ${MAIN_FILES})
 
 add_library(ccoifits_static STATIC ${CCOIFITS_SOURCE} ${CCFITS_LIBRARIES})
-target_link_libraries(ccoifits_static ${CCFITS_LIBRARIES})
+target_link_libraries(ccoifits_static pathfind ${CCFITS_LIBRARIES})
 add_library(ccoifits SHARED ${CCOIFITS_SOURCE} ${CCFITS_LIBRARIES})
-target_link_libraries(ccoifits ${CCFITS_LIBRARIES})
+target_link_libraries(ccoifits pathfind ${CCFITS_LIBRARIES})
 
 add_executable(ccoifits_tests ${MAIN_FILES})
 target_link_libraries(ccoifits_tests ccoifits ${CCFITS_LIBRARIES})

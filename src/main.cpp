@@ -12,7 +12,7 @@
 #include <cassert>
 
 #include "main.h"
-#include "PathFinding.h"
+#include "PathFind.hpp"
 #include "oi_file.hpp"
 #include "oi_filter.hpp"
 

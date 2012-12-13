@@ -17,4 +17,10 @@ SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
 
+# We need to compile the following libraries
+if(NOT TARGET pathfind)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/lib/pathfind EXCLUDE_FROM_ALL)
+    include_directories(${CMAKE_SOURCE_DIR}/lib/pathfind/src)
+endif(NOT TARGET pathfind)
+
 add_subdirectory(src)

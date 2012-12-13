@@ -1,0 +1,3 @@
+[submodule "lib/pathfind"]
+	path = lib/pathfind
+	url = https://github.com/bkloppenborg/pathfind.git
