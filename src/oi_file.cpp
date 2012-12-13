@@ -74,7 +74,7 @@ void COIFile::open(string filename)
 	}
 	catch(CCfits::FITS::CantOpen & e)
 	{
-		throw runtime_error("Cannot find FITS file" + filename);
+		throw runtime_error("Cannot find FITS file " + filename);
 	}
 }
 
@@ -82,7 +82,15 @@ void COIFile::open(string filename)
 void COIFile::open(string filename, RWmode mode = Read)
 {
 	// Open the file
-	mOIFITS.reset(new FITS(filename, mode, true));
+	// Open the file
+	try
+	{
+		mOIFITS.reset(new FITS(filename, mode, true));
+	}
+	catch(CCfits::FITS::CantOpen & e)
+	{
+		throw runtime_error("Cannot find FITS file " + filename);
+	}
 }
 
 /// Reads the OIFITS file.  Returns an OIDataList with the data.
