@@ -159,7 +159,7 @@ node_ptr UVKDTree::Insert(uv_point & uv)
 		uv.second *= -1;
 	}
 
-	Insert(uv, this->root, 0);
+	return Insert(uv, this->root, 0);
 }
 
 /// Inserts the point uv into a subtree starting at node
