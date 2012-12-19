@@ -8,7 +8,8 @@
 #include "oi_tools.hpp"
 
 #include <random>
-#include <chrono>
+// TODO: Swap <ctime> for <chrono> when clang supports c++11
+#include <ctime>
 #include <cmath>
 using namespace std;
 
@@ -65,7 +66,9 @@ void Bootstrap_Random_Helper(const OIDataList & input, OIDataList & output)
 	// local vars:
 	int n_to_flag = 0;
 
-	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	unsigned seed = std::time(0);
+	// TODO: Enable when clang fully supports C++11
+	//unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine generator (seed);
 	std::uniform_int_distribution<int> row_dist(0, input.size() - 1);
 
@@ -109,7 +112,9 @@ OIDataList Bootstrap_Spectral(const OIDataList & data)
 void Bootstrap_Spectral_Helper(const OIDataList & input, OIDataList & output)
 {
 	// Init a random number generator:
-	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	unsigned seed = std::time(0);
+	// TODO: Enable when clang fully supports C++11
+	//unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine generator (seed);
 
 	// Generate a random distribution of the same size as the number of OI_VIS records

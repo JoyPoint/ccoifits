@@ -7,7 +7,8 @@
 
 #include <limits>
 #include <random>
-#include <chrono>
+// TODO: Swap <ctime> for <chrono> when clang supports c++11
+#include <ctime>
 
 #include "COIDataRow.h"
 #include "COITarget.h"
@@ -159,7 +160,9 @@ void COIDataRow::RandomMask(unsigned int n_to_flag)
 	// The number of flags to set must always be less than the number of unflagged parameters.
 	assert(n_to_flag < GetMaskedNData());
 
-	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	unsigned seed = std::time(0);
+	// TODO: Enable when clang fully supports C++11
+	//unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine generator (seed);
 	std::uniform_int_distribution<int> flag_dist(0, flag.size() - 1);
 	unsigned int entry = 0;

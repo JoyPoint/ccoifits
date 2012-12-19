@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(libccoifits)
 
 # Compile with C++11 support
-ADD_DEFINITIONS("-std=c++0x -pthread")
+ADD_DEFINITIONS("-std=c++11 -stdlib=libc++")
 
 #set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_BUILD_TYPE DEBUG)
