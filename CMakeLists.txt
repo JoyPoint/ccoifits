@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 2.8) 
 project(libccoifits)
 
-# Compile with C++11 support
-ADD_DEFINITIONS("-std=c++11 -stdlib=libc++")
+# Compile with C++11 support.  Disable __STRICT_ANSI__ to support 
+# some nice OpenCL shortcuts (i.e. cl_float2's .s0, .s1 syntax).
+if("${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1}" MATCHES ".*clang")
+    ADD_DEFINITIONS("-stdlib=libc++")
+endif("${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1}" MATCHES ".*clang")
+ADD_DEFINITIONS("-std=c++0x")
 
 #set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_BUILD_TYPE DEBUG)
