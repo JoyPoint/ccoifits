@@ -1,6 +1,6 @@
 # Ignore everything
 *
 
-# Except the .gitignore
+# Except the following
 !.gitignore
 !gtest*
