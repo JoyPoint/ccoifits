@@ -3,4 +3,4 @@
 
 # Except the .gitignore
 !.gitignore
-
+!gtest-1.6.0

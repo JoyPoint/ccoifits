@@ -10,17 +10,20 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/calibrators)
 # Export the inclusion directories:
 set(CCOIFITS_INCLUDE_DIRS ${CCFITS_INCLUDE_DIR} CACHE INTERNAL "")
 
+# Get a list of all source files in the directory
 file(GLOB CCOIFITS_SOURCE *.cpp calibrators/*.cpp)
-file(GLOB MAIN_FILES main.cpp PathFind.cpp)
-list(REMOVE_ITEM CCOIFITS_SOURCE ${MAIN_FILES})
+
+# List all of the unit tests, remove them from CCOIFITS_SOURCE
+file(GLOB TEST_SOURCE ccoifits_tests.cpp *_test.cpp)
+list(REMOVE_ITEM CCOIFITS_SOURCE ${TEST_SOURCE})
 
 add_library(ccoifits_static STATIC ${CCOIFITS_SOURCE} ${CCFITS_LIBRARIES})
 target_link_libraries(ccoifits_static ${CCFITS_LIBRARIES})
 add_library(ccoifits SHARED ${CCOIFITS_SOURCE} ${CCFITS_LIBRARIES})
 target_link_libraries(ccoifits ${CCFITS_LIBRARIES})
 
-add_executable(ccoifits_tests ${MAIN_FILES})
-target_link_libraries(ccoifits_tests ccoifits ${CCFITS_LIBRARIES})
+add_executable(ccoifits_tests ${TEST_SOURCE})
+target_link_libraries(ccoifits_tests gtest ccoifits_static ${CCFITS_LIBRARIES})
 
 install(TARGETS ccoifits DESTINATION lib)
 install(FILES oi_file.hpp DESTINATION include)
