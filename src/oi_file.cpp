@@ -128,7 +128,6 @@ OIDataList COIFile::read()
 		mArrays[tmp->GetName()] = tmp;
 	}
 
-
 	// Read in all OI_WAVELENGTH tables, store them in a map<string, OIWavelengthPtr>
 	n_tables = ext.count("OI_WAVELENGTH");
 	for(int i = 0; i < n_tables; i++)
