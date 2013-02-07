@@ -82,7 +82,6 @@ void COIFile::open(string filename)
 void COIFile::open(string filename, RWmode mode = Read)
 {
 	// Open the file
-	// Open the file
 	try
 	{
 		mOIFITS.reset(new FITS(filename, mode, true));
