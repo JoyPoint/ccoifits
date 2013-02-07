@@ -17,6 +17,10 @@ file(GLOB CCOIFITS_SOURCE *.cpp calibrators/*.cpp)
 file(GLOB TEST_SOURCE ccoifits_tests.cpp *_test.cpp)
 list(REMOVE_ITEM CCOIFITS_SOURCE ${TEST_SOURCE})
 
+# List all of the executables, remove them from CCOIFITS_SOURCE
+file(GLOB EXECUTABLE_SOURCE oiexport.cpp)
+list(REMOVE_ITEM CCOIFITS_SOURCE ${EXECUTABLE_SOURCE})
+
 add_library(ccoifits_static STATIC ${CCOIFITS_SOURCE} ${CCFITS_LIBRARIES})
 target_link_libraries(ccoifits_static ${CCFITS_LIBRARIES})
 add_library(ccoifits SHARED ${CCOIFITS_SOURCE} ${CCFITS_LIBRARIES})
@@ -24,6 +28,9 @@ target_link_libraries(ccoifits ${CCFITS_LIBRARIES})
 
 add_executable(ccoifits_tests ${TEST_SOURCE})
 target_link_libraries(ccoifits_tests gtest ccoifits_static ${CCFITS_LIBRARIES})
+
+add_executable(oiexport oiexport.cpp)
+target_link_libraries(oiexport ccoifits_static ${CCFITS_LIBRARIES})
 
 install(TARGETS ccoifits DESTINATION lib)
 install(FILES oi_file.hpp DESTINATION include)
