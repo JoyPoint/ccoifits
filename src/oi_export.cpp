@@ -14,6 +14,11 @@
 #include <string>
 #include <fstream>
 
+#ifndef PI
+#include <cmath>
+#define PI M_PI
+#endif // PI
+
 #include "COIDataRow.h"
 #include "COIV2Row.h"
 #include "COIT3Row.h"
@@ -335,23 +340,47 @@ void Export_MinUV_T3(UVKDTree & uv_tree, const OIDataList & data_list, vector<tu
 	}
 }
 
-/// Exports an OIDataList to a text file which begins with base_filename
-/// extensions are automatically added as follows:
-///  _vis.txt for visibility data
-///  _v2.txt for V2 data
-///  _t3.txt for T3 data
+/// Exports an OIDataList to a series of text files whose names begin with base_filename.
+/// The extensions and formats are described in the other Export_ToText function below.
 void Export_ToText(const OIDataList & data, string base_filename)
 {
+	// Get the current OpenCL values:
 	vector<pair<double,double> > uv_points;
 	valarray<complex<double>> vis;
 	valarray<pair<double,double>> vis_err;
+	vector<unsigned int> vis_uv_ref;
 	valarray<double> vis2;
 	valarray<double> vis2_err;
+	vector<unsigned int> vis2_uv_ref;
 	valarray<complex<double>> t3;
-	valarray<pair<double,double>> t3_err;
+	valarray<pair<double,double> > t3_err;
+	vector<tuple<unsigned int, unsigned int, unsigned int>> t3_uv_ref;
+	vector<tuple<short, short, short>> t3_uv_sign;
 
-	// Get a copy of the data
-	Export_Direct(data, uv_points, vis, vis_err, vis2, vis2_err, t3, t3_err);
+	// Get the data in minimum UV point format:
+	Export_MinUV(data, uv_points, vis, vis_err, vis_uv_ref, vis2, vis2_err, vis2_uv_ref, t3, t3_err, t3_uv_ref, t3_uv_sign);
+	Export_ToText(base_filename, uv_points, vis, vis_err, vis_uv_ref, vis2, vis2_err, vis2_uv_ref, t3, t3_err, t3_uv_ref, t3_uv_sign);
+}
+
+/// Exports the specified data to a series of text files whose names begin with base_filename.
+/// Extensions and formats are as follows:
+///  *_vis.txt for vis data in "u, v, |uv|, vis_amp, vis_phi, vis_amp_err, vis_phi_err" per line
+///  *_v2.txt for V2 data in "u, v, |uv|, v2, v2_err" per line
+///  *_t3.txt for T3 data in "u1, v1, u2, v2, u3, v3, |uv|, t3_amp, t3_amp_err, t3_phi, t3_phi_err" per line
+
+void Export_ToText(string base_filename,
+	vector<pair<double,double> > uv_points,
+	valarray<complex<double>> vis,
+	valarray<pair<double,double>> vis_err,
+	vector<unsigned int> vis_uv_ref,
+	valarray<double> vis2,
+	valarray<double> vis2_err,
+	vector<unsigned int> vis2_uv_ref,
+	valarray<complex<double>> t3,
+	valarray<pair<double,double> > t3_err,
+	vector<tuple<unsigned int, unsigned int, unsigned int>> t3_uv_ref,
+	vector<tuple<short, short, short>> t3_uv_sign)
+{
 
 	int n_uv = 0;
 	double u1, u2, u3;
@@ -368,8 +397,8 @@ void Export_ToText(const OIDataList & data, string base_filename)
 		for(unsigned int i = 0; i < vis.size(); i++)
 		{
 			temp.clear();
-			u1 = uv_points[n_uv].first;
-			v1 = uv_points[n_uv].second;
+			u1 = uv_points[vis_uv_ref[i]].first;
+			v1 = uv_points[vis_uv_ref[i]].second;
 			temp.push_back(u1);
 			temp.push_back(v1);
 			temp.push_back(sqrt(u1*u1 + v1*v1));
@@ -380,9 +409,6 @@ void Export_ToText(const OIDataList & data, string base_filename)
 
 			// Write the output
 			outfile << join(",", temp) << endl;
-
-			// increment the UV counter
-			n_uv += 1;
 		}
 		outfile.close();
 	}
@@ -396,8 +422,8 @@ void Export_ToText(const OIDataList & data, string base_filename)
 		for(unsigned int i = 0; i < vis2.size(); i++)
 		{
 			temp.clear();
-			u1 = uv_points[n_uv].first;
-			v1 = uv_points[n_uv].second;
+			u1 = uv_points[vis2_uv_ref[i]].first;
+			v1 = uv_points[vis2_uv_ref[i]].second;
 			temp.push_back(u1);
 			temp.push_back(v1);
 			temp.push_back(sqrt(u1*u1 + v1*v1));
@@ -406,9 +432,6 @@ void Export_ToText(const OIDataList & data, string base_filename)
 
 			// Write the output
 			outfile << join(",", temp) << endl;
-
-			// increment the UV counter
-			n_uv += 1;
 		}
 		outfile.close();
 	}
@@ -418,16 +441,16 @@ void Export_ToText(const OIDataList & data, string base_filename)
 	{
 		outfile.open(base_filename + "_t3.txt");
 		outfile << "# File format:" << endl;
-		outfile << "# u1, v1, u2, v2, u3, v3, |u1^2+v1^2+u2^2+v2^2+u3^2+v3^2|, t3_amp, t3_phi, t3_amp_err, t3_phi_err" << endl;
+		outfile << "# u1, v1, u2, v2, u3, v3, |u1^2+v1^2+u2^2+v2^2+u3^2+v3^2|, t3_amp, t3_amp_err, t3_phi, t3_phi_err" << endl;
 		for(unsigned int i = 0; i < t3.size(); i++)
 		{
 			temp.clear();
-			u1 = uv_points[n_uv].first;
-			v1 = uv_points[n_uv].second;
-			u2 = uv_points[n_uv + 1].first;
-			v2 = uv_points[n_uv + 1].second;
-			u3 = uv_points[n_uv + 2].first;
-			v3 = uv_points[n_uv + 2].second;
+			u1 = uv_points[get<0>(t3_uv_ref[i])].first;
+			v1 = uv_points[get<0>(t3_uv_ref[i])].second;
+			u2 = uv_points[get<1>(t3_uv_ref[i])].first;
+			v2 = uv_points[get<1>(t3_uv_ref[i])].second;
+			u3 = uv_points[get<2>(t3_uv_ref[i])].first;
+			v3 = uv_points[get<2>(t3_uv_ref[i])].second;
 			temp.push_back(u1);
 			temp.push_back(v1);
 			temp.push_back(u2);
@@ -435,10 +458,11 @@ void Export_ToText(const OIDataList & data, string base_filename)
 			temp.push_back(u3);
 			temp.push_back(v3);
 			temp.push_back(sqrt(u1*u1 + v1*v1 + u2*u2 + v2*v2 + u3*u3 + v3*v3));
-			temp.push_back(real(t3[i]));
-			temp.push_back(imag(t3[i]));
+			temp.push_back(abs(t3[i]));
 			temp.push_back(t3_err[i].first);
-			temp.push_back(t3_err[i].second);
+			// Convert from radians back to degrees (to match OIFITS specifications)
+			temp.push_back(arg(t3[i]) * 180 / PI);
+			temp.push_back(t3_err[i].second  * 180 / PI);
 			// Write the output
 			outfile << join(",", temp) << endl;
 
