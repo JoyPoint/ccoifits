@@ -22,8 +22,10 @@ SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
 
 # Include and build Google Test framework:
-ADD_SUBDIRECTORY (lib/gtest-1.6.0)
-enable_testing()
+if(NOT TARGET gtest)
+    ADD_SUBDIRECTORY (lib/gtest-1.6.0)
+    enable_testing()
+endif(NOT TARGET gtest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 add_subdirectory(src)
