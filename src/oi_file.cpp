@@ -129,7 +129,6 @@ OIDataList COIFile::read()
 			COI_ARRAY oi_array = COI_ARRAY(*table);
 			OIArrayPtr tmp = oi_array.read();
 			mArrays[tmp->GetName()] = tmp;
-			cout << tmp->GetName() << endl;
 		}
 	}
 
@@ -162,7 +161,7 @@ OIDataList COIFile::read()
 			OIDataList tmp = oi_vis.read();
 			data.insert(data.end(), tmp.begin(), tmp.end());
 		}
-		else if(table->name() == "OI_V2")
+		else if(table->name() == "OI_VIS2")
 		{
 			COI_VIS2 oi_vis2 = COI_VIS2(*table, this);
 			OIDataList tmp = oi_vis2.read();
