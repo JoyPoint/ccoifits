@@ -101,31 +101,25 @@ OIDataList COIFile::read()
 	OIDataList data;
 	int n_tables = 0;
 
-	// Get access to the FITS extension map.
+	// Get access to the extension multimap
 	const CCfits::ExtMap & ext = mOIFITS->extension();
 
-	// First verify that there is an OI_TARGET table in the file, if not exit immediately.
+	// First verify that there is exactly one OI_TARGET table in the file. If not,
+	// throw an exception
 	n_tables = ext.count("OI_TARGET");
 	if(n_tables == 0)
 		throw runtime_error("No OI_TARGET found in file.");
+	else if(n_tables > 1)
+		throw runtime_error("Too many OI_TARGET tables found in file.");
 
-	// Read all targets, store in a map<int, OITargetPtr>
-	for(auto extmap: ext)
-	{
-		table = extmap.second;
-
-		if(table->name() == "OI_TARGET")
-		{
-			COI_TARGET oi_target = COI_TARGET(*table);
-			vector<OITargetPtr> targets = oi_target.read();
-			for(auto it = targets.begin(); it < targets.end(); ++it)
-				mTargets[(*it)->GetID()] = (*it);
-		}
-		break;
-	}
+	// Read in the OI_TARGET
+	table = ext.find("OI_TARGET")->second;
+	COI_TARGET oi_target = COI_TARGET(*table);
+	vector<OITargetPtr> targets = oi_target.read();
+	for(auto it = targets.begin(); it < targets.end(); ++it)
+		mTargets[(*it)->GetID()] = (*it);
 
 	// Read in all OI_ARRAY tables. Store them in a map<string, OIArrayPtr>
-	// Read in all OI_WAVELENGTH tables, store them in a map<string, OIWavelengthPtr>
 	for(auto extmap: ext)
 	{
 		table = extmap.second;
@@ -135,6 +129,7 @@ OIDataList COIFile::read()
 			COI_ARRAY oi_array = COI_ARRAY(*table);
 			OIArrayPtr tmp = oi_array.read();
 			mArrays[tmp->GetName()] = tmp;
+			cout << tmp->GetName() << endl;
 		}
 	}
 
