@@ -110,97 +110,79 @@ OIDataList COIFile::read()
 		throw runtime_error("No OI_TARGET found in file.");
 
 	// Read all targets, store in a map<int, OITargetPtr>
-	table = &mOIFITS->extension("OI_TARGET");
-	COI_TARGET oi_target = COI_TARGET(*table);
-	vector<OITargetPtr> targets = oi_target.read();
-	for(auto it = targets.begin(); it < targets.end(); ++it)
-		mTargets[(*it)->GetID()] = (*it);
+	for(auto extmap: ext)
+	{
+		table = extmap.second;
+
+		if(table->name() == "OI_TARGET")
+		{
+			COI_TARGET oi_target = COI_TARGET(*table);
+			vector<OITargetPtr> targets = oi_target.read();
+			for(auto it = targets.begin(); it < targets.end(); ++it)
+				mTargets[(*it)->GetID()] = (*it);
+		}
+		break;
+	}
 
 	// Read in all OI_ARRAY tables. Store them in a map<string, OIArrayPtr>
-	n_tables = ext.count("OI_ARRAY");
-	for(int i = 0; i < n_tables; i++)
+	// Read in all OI_WAVELENGTH tables, store them in a map<string, OIWavelengthPtr>
+	for(auto extmap: ext)
 	{
-		// Read in the ith plus one entry (CCFits convention here).
-		table = &mOIFITS->extension("OI_ARRAY", i+1);
-		COI_ARRAY oi_array = COI_ARRAY(*table);
-		OIArrayPtr tmp = oi_array.read();
-		mArrays[tmp->GetName()] = tmp;
+		table = extmap.second;
+
+		if(table->name() == "OI_ARRAY")
+		{
+			COI_ARRAY oi_array = COI_ARRAY(*table);
+			OIArrayPtr tmp = oi_array.read();
+			mArrays[tmp->GetName()] = tmp;
+		}
 	}
 
 	// Read in all OI_WAVELENGTH tables, store them in a map<string, OIWavelengthPtr>
-	n_tables = ext.count("OI_WAVELENGTH");
-	for(int i = 0; i < n_tables; i++)
+	for(auto extmap: ext)
 	{
-		// Read in the ith plus one entry (CCFits convention here).
-		table = &mOIFITS->extension("OI_WAVELENGTH", i+1);
-		COI_WAVELENGTH oi_wave = COI_WAVELENGTH(*table);
-		OIWavelengthPtr tmp = oi_wave.read();
-		mWaves[tmp->GetName()] = tmp;
+		table = extmap.second;
+
+		if(table->name() == "OI_WAVELENGTH")
+		{
+			COI_WAVELENGTH oi_wave = COI_WAVELENGTH(*table);
+			OIWavelengthPtr tmp = oi_wave.read();
+			mWaves[tmp->GetName()] = tmp;
+		}
 	}
 
 	// Now read in all OI_VIS, OI_VIS2, OI_T3 tables, associating the data with
 	// the corresponding shared pointers from above. Store the results of this
 	// operation in a vector<OIDataList> which we return from this function
 
-	// TODO: The clunky form of iterating over tables within the OIFITS file can probably
-	// be fixed using multimap::equal_range. But I'm not sure how to do this within CCFits
-	// data formats.
-
-	// First all OI_VIS records:
-	n_tables = ext.count("OI_VIS");
-	for(int i = 0; i < n_tables; i++)
+	// Iterate over each extension
+	for(auto extmap: ext)
 	{
-		// It is possible that the EXTVER may not be the next integer increment
-		// so we'll try and catch NoSuchHDU exceptions
-		try
-		{
-			table = &mOIFITS->extension("OI_VIS", i+1);
-		}
-		catch(CCfits::FITS::NoSuchHDU & e)
-		{
-			n_tables += 1;
-			continue;
-		}
-		COI_VIS oi_vis = COI_VIS(*table, this);
-		OIDataList tmp = oi_vis.read();
-		data.insert(data.end(), tmp.begin(), tmp.end());
-	}
+		table = extmap.second;
 
-	// Second, OI_VIS2 records:
-	n_tables = ext.count("OI_VIS2");
-	for(int i = 0; i < n_tables; i++)
-	{
-		try
+		// Parse OI_VIS, OI_V2, and OI_T3 tables:
+		if(table->name() == "OI_VIS")
 		{
-			table = &mOIFITS->extension("OI_VIS2", i+1);
+			COI_VIS oi_vis = COI_VIS(*table, this);
+			OIDataList tmp = oi_vis.read();
+			data.insert(data.end(), tmp.begin(), tmp.end());
 		}
-		catch(CCfits::FITS::NoSuchHDU & e)
+		else if(table->name() == "OI_V2")
 		{
-			n_tables += 1;
-			continue;
+			COI_VIS2 oi_vis2 = COI_VIS2(*table, this);
+			OIDataList tmp = oi_vis2.read();
+			data.insert(data.end(), tmp.begin(), tmp.end());
 		}
-
-		COI_VIS2 oi_vis2 = COI_VIS2(*table, this);
-		OIDataList tmp = oi_vis2.read();
-		data.insert(data.end(), tmp.begin(), tmp.end());
-	}
-
-	// Lastly, OI_T3 records:
-	n_tables = ext.count("OI_T3");
-	for(int i = 0; i < n_tables; i++)
-	{
-		try
+		else if(table->name() == "OI_T3")
 		{
-			table = &mOIFITS->extension("OI_T3", i+1);
+			COI_T3 oi_t3 = COI_T3(*table, this);
+			OIDataList tmp = oi_t3.read();
+			data.insert(data.end(), tmp.begin(), tmp.end());
 		}
-		catch(CCfits::FITS::NoSuchHDU & e)
+		else
 		{
-			n_tables += 1;
-			continue;
+			// some other table we don't presently care about.
 		}
-		COI_T3 oi_t3 = COI_T3(*table, this);
-		OIDataList tmp = oi_t3.read();
-		data.insert(data.end(), tmp.begin(), tmp.end());
 	}
 
 	return data;
