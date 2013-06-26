@@ -68,28 +68,26 @@ public:
 	{
 		vector< valarray<T> > values;
 		int n_rows = mTable.rows();
-
-		// Try to read the column as an array, if this fails,
-		// fall back to the scalar column reading routine and
-		// copy values manually
+		
+		// First try to read in the column as an array
 		try
 		{
-			mTable.column(column).readArrays(values, 1, n_rows);
+			mTable.column(column).readArrays(values, 0, n_rows);
 		}
-		catch(CCfits::Column::WrongColumnType e)
+		catch(CCfits::Column::WrongColumnType error)
 		{
-			valarray<T> temp;
-			mTable.column(column).read(temp, 1, n_rows);
-			values.resize(temp.size());
+			// It must not be a 2D column, so read it in as a 1D column
+			valarray<T> temp_column;
+			mTable.column(column).read(temp_column, 0, n_rows);
 
-			// Resize the valarray and copy in the value.
-			for(unsigned int i = 0; i < temp.size(); i++)
+			// Now convert it to a 2D column with one entry in each row
+			values.resize(temp_column.size());
+			for(int i = 0; i < temp_column.size(); i++)
 			{
 				values[i].resize(1);
-				values[i][0] = temp[i];
+				values[i][0] = temp_column[i];
 			}
 		}
-
 		return values;
 	}
 
