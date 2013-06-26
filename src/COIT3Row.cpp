@@ -23,8 +23,8 @@ COIT3Row::COIT3Row(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelen
 
 	// Construct the uv31 UV point:
 	OIUVPtr uv31 = OIUVPtr( new COIUV );
-	uv31->u = -(uv12->u + uv23->u);
-	uv31->v = -(uv12->v + uv23->v);
+	uv31->u = uv12->u + uv23->u;
+	uv31->v = uv12->v + uv23->v;
 	mUV.push_back(uv31);
 }
 
