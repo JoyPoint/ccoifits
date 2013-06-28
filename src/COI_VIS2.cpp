@@ -46,6 +46,9 @@ OIDataList COI_VIS2::read()
 	vector< valarray<double> > v2_data = ReadArray<double>("VIS2DATA");
 	vector< valarray<double> > v2_data_err = ReadArray<double>("VIS2ERR");
 
+	// Check the values for NAN or < 0 errors
+	CheckErrorArray(v2_data_err, flags, "vis2_err");
+
 	vector<double> ucoord = ReadColumn<double>("UCOORD");
 	vector<double> vcoord = ReadColumn<double>("VCOORD");
 

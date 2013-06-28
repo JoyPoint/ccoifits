@@ -53,6 +53,10 @@ OIDataList COI_VIS::read()
 	vector< valarray<double> > vis_amp_err = ReadArray<double>("VISAMPERR");
 	vector< valarray<double> > vis_phi_err = ReadArray<double>("VISPHIERR");
 
+	// Check the values for NAN or < 0 errors
+	CheckErrorArray(vis_amp_err, flags, "vis_amp_err");
+	CheckErrorArray(vis_phi_err, flags, "vis_phi_err");
+
 	vector<double> ucoord = ReadColumn<double>("UCOORD");
 	vector<double> vcoord = ReadColumn<double>("VCOORD");
 

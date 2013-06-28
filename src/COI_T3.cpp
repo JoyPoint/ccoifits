@@ -55,6 +55,10 @@ OIDataList COI_T3::read()
 	vector< valarray<double> > t3_amp_err = ReadArray<double>("T3AMPERR");
 	vector< valarray<double> > t3_phi_err = ReadArray<double>("T3PHIERR");
 
+	// Check the values for NAN or < 0 errors
+	CheckErrorArray(t3_amp_err, flags, "t3_amp_err");
+	CheckErrorArray(t3_phi_err, flags, "t3_phi_err");
+
 	// Copy the data into valarrays of complex doubles for storage in the COIT3Row class;
 	vector< valarray< complex<double> > > data;
 	vector< valarray< pair<double,double> > > data_err;
