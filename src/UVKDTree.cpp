@@ -184,7 +184,7 @@ node_ptr UVKDTree::Insert(const uv_point & uv, node_ptr & node, unsigned int dep
 
 bool UVKDTree::less_than(const uv_point & uv, const node_ptr & node, unsigned int depth)
 {
-	int axis = depth / 2;
+	int axis = depth % 2;
 	if(axis == 0)
 		return uv.first < node->uv.first;
 	else
@@ -229,14 +229,14 @@ node_ptr UVKDTree::uv_tree(vector<uv_point>::iterator start, vector<uv_point>::i
 	unsigned int median = size / 2;
 
 	// Sort by either u or v, depending on the depth:
-	int axis = depth / 2;
+	int axis = depth % 2;
 	if(axis == 0)
 		sort(start, end, uv_sort_u);
 	else
 		sort(start, end, uv_sort_v);
 
 	// Pick the midpoint.
-	auto mid = start + int(size / 2);
+	auto mid = start + median;
 
 	// Create a new node, wrap in a shared_ptr
 	node_ptr node(new kd_uv_node());
