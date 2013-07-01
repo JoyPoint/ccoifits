@@ -66,7 +66,7 @@ void UVTree::BuildTree(const OIDataList & data)
 
 	sort(uv_points.begin(), uv_points.end(), uv_sort_u);
 
-	cout << "Creating tree with " << uv_points.size() << " UV points." << endl;
+//	cout << "Creating tree with " << uv_points.size() << " UV points." << endl;
 
 	// Now build the tree
 	// NOTE: Because of how the building algorithim works, the start and
