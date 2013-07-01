@@ -76,6 +76,10 @@ void UVTree::BuildTree(const OIDataList & data)
 	this->root = uv_tree(uv_points.begin(), uv_points.end());
 }
 
+/// \brief Compares two UV points
+///
+/// This function assumes the UV coordinates are in spatial frequency (i.e. ~1E6) so that
+/// adjacent spectral channels are (probably) clearly separated.
 bool UVTree::compare_uv(const uv_point & uv1, const uv_point & uv2)
 {
 
@@ -99,7 +103,7 @@ node_ptr UVTree::FindUV(uv_point uv, bool insert_on_fail)
 {
 	node_ptr node = FindUV(uv, this->root);
 
-	if(node == NULL)
+	if(node == NULL && insert_on_fail)
 		node = Insert(uv);
 
 	return node;
@@ -162,6 +166,8 @@ node_ptr UVTree::Insert(uv_point & uv)
 		uv.second *= -1;
 	}
 
+//	cout << " Inserting: " << std::setprecision(0) << uv.first << ", " << uv.second << endl;
+
 	return Insert(uv, this->root);
 }
 
@@ -217,41 +223,42 @@ bool UVTree::uv_sort_u(const uv_point &a, const uv_point &b)
 node_ptr UVTree::uv_tree(vector<uv_point>::iterator start, vector<uv_point>::iterator end)
 {
 	// Create a  new node
-	node_ptr node(0);
-
-	// Determine how many elements we have
-	// If there are zero, we have a NULL node pointer.
+	node_ptr node(new uv_node());
 	unsigned int size = distance(start, end);
-	if(size == 0)
+	auto mid = start + size/2;
+
+	// assign the current UV point
+	node->uv = *(mid);
+
+	// calculate the left and and right nodes from the midpoint
+	auto left = mid - 1;
+	auto right = mid + 1;
+
+	// strip repeated nodes. This shouldn't happen when opening
+	// OIFITS files directly, but can happen in bootstrapped data sets.
+	while(left >= start && compare_uv(*(left), *(mid)))
 	{
-		// One element, it becomes this point.
-		node.reset(new uv_node());
-		node->uv = *(start);
+		left--;
 	}
-	else if(size == 1)
+
+	while(right <= end && compare_uv(*(right), *(mid)))
 	{
-		// One element, it becomes this point.
-		node.reset(new uv_node());
-		node->uv = *(start);
+		right++;
 	}
-	else if(size > 1)
-	{
-		sort(start, end, uv_sort_u);
 
-		// Otherwise, we need to populate this point
-		node.reset(new uv_node());
-
-		// find the midpoint
-		auto mid = start + size / 2;
-		node->uv = *(mid);
-
-		auto left = mid - 1;
-		auto right = mid + 1;
-
+	// Add children. If the node is at an endpoint, the
+	// child should be an empty (null) node_ptr
+	if(left >= start)
 		node->left_child = uv_tree(start, left);
-		node->right_child = uv_tree(right, end);
-	}
+	else
+		node->left_child = node_ptr();
 
+	if(right <= end)
+		node->right_child = uv_tree(right, end);
+	else
+		node->right_child = node_ptr();
+
+	// return this node.
 	return node;
 }
 
