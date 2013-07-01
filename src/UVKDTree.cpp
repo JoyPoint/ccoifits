@@ -17,13 +17,13 @@ using namespace std;
 namespace ccoifits
 {
 
-void UVKDTree::AssignIndicies()
+void UVTree::AssignIndicies()
 {
 	unsigned int id = 0;
 	AssignIndicies(this->root, id);
 }
 
-void UVKDTree::AssignIndicies(node_ptr & node, unsigned int & node_index)
+void UVTree::AssignIndicies(node_ptr & node, unsigned int & node_index)
 {
 	node->index = node_index;
 	node_index += 1;
@@ -36,7 +36,7 @@ void UVKDTree::AssignIndicies(node_ptr & node, unsigned int & node_index)
 }
 
 /// Builds a KD tree of UVPoints from data
-void UVKDTree::BuildTree(const OIDataList & data)
+void UVTree::BuildTree(const OIDataList & data)
 {
 	vector<uv_point> uv_points;
 
@@ -64,15 +64,19 @@ void UVKDTree::BuildTree(const OIDataList & data)
 		}
 	}
 
+	sort(uv_points.begin(), uv_points.end(), uv_sort_u);
+
+	cout << "Creating tree with " << uv_points.size() << " UV points." << endl;
+
 	// Now build the tree
 	// NOTE: Because of how the building algorithim works, the start and
 	// end points must be the true starting and ending points of the vector.
 	// Normally end points to an element one beyond the end of the vector
 	// so we simply decrement end before passing it in.
-	this->root = uv_tree(uv_points.begin(), uv_points.end() - 1, 0);
+	this->root = uv_tree(uv_points.begin(), uv_points.end());
 }
 
-bool UVKDTree::compare_uv(const uv_point & uv1, const uv_point & uv2)
+bool UVTree::compare_uv(const uv_point & uv1, const uv_point & uv2)
 {
 
 	// Because every point is conjugated into the +u half-plane, we can compare
@@ -86,20 +90,25 @@ bool UVKDTree::compare_uv(const uv_point & uv1, const uv_point & uv2)
 	return false;
 }
 
-node_ptr UVKDTree::FindUV(uv_point uv)
+node_ptr UVTree::FindUV(uv_point uv)
 {
-	return FindUV(uv, this->root, 0, false);
+	return FindUV(uv, this->root);
 }
 
-node_ptr UVKDTree::FindUV(uv_point uv, bool insert_on_fail)
+node_ptr UVTree::FindUV(uv_point uv, bool insert_on_fail)
 {
-	return FindUV(uv, this->root, 0, insert_on_fail);
+	node_ptr node = FindUV(uv, this->root);
+
+	if(node == NULL)
+		node = Insert(uv);
+
+	return node;
 }
 
 /// Attempts to find uv_point in the tree.
 /// If no node is found and insert_on_fail is false, the function will return an empty node_ptr;
 /// If no node is found and insert_on_fail is true, a new node for uv will be created and returned.
-node_ptr UVKDTree::FindUV(uv_point uv, node_ptr & node, unsigned int depth, bool insert_on_fail)
+node_ptr UVTree::FindUV(uv_point uv, node_ptr & node)
 {
 	// We enforce that the tree has all positive uv.first values, conjugate if necessary.
 	if(uv.first < 0)
@@ -108,34 +117,28 @@ node_ptr UVKDTree::FindUV(uv_point uv, node_ptr & node, unsigned int depth, bool
 		uv.second *= -1;
 	}
 
+	// If we hit an unpopulated leaf, return this node
+	if(node == NULL)
+		return node;
+
+	// Compare the node with the UV point
 	if(compare_uv(uv, node->uv))
 		return node;
 
-	// Switch between comparing u and v depending on the depth:
-	bool go_left = less_than(uv, node, depth);
+	if(less_than(uv, node))
+		return FindUV(uv, node->left_child);
 
-	// only proceed into children nodes if they are not null
-	if(node->left_child != NULL && go_left)
-		return FindUV(uv, node->left_child, depth + 1, insert_on_fail);
-	if(node->right_child != NULL)
-		return FindUV(uv, node->right_child, depth + 1, insert_on_fail);
-
-	// If we are instructed to insert upon failure, do so
-	if(insert_on_fail)
-		return Insert(uv, node, depth);
-
-	// otherwise return a null node_ptr
-	return node_ptr();
+	return FindUV(uv, node->right_child);
 }
 
-vector<pair<double,double> > UVKDTree::Flatten()
+vector<pair<double,double> > UVTree::Flatten()
 {
 	vector<pair<double,double> > output;
 	Flatten(this->root, output);
 	return output;
 }
 
-vector<pair<double, double>> UVKDTree::Flatten(node_ptr & node, vector<pair<double,double>> & output)
+vector<pair<double, double>> UVTree::Flatten(node_ptr & node, vector<pair<double,double>> & output)
 {
 	output.push_back(node->uv);
 
@@ -150,7 +153,7 @@ vector<pair<double, double>> UVKDTree::Flatten(node_ptr & node, vector<pair<doub
 
 /// Inserts the point uv into the tree.
 /// NOTE: This is intended to be used only after a tree already exists.
-node_ptr UVKDTree::Insert(uv_point & uv)
+node_ptr UVTree::Insert(uv_point & uv)
 {
 	// Flip into the +u half-plane
 	if(uv.first < 0)
@@ -159,46 +162,40 @@ node_ptr UVKDTree::Insert(uv_point & uv)
 		uv.second *= -1;
 	}
 
-	return Insert(uv, this->root, 0);
+	return Insert(uv, this->root);
 }
 
 /// Inserts the point uv into a subtree starting at node
 /// NOTE: This is intended to be used only after a tree already exists.
-node_ptr UVKDTree::Insert(const uv_point & uv, node_ptr & node, unsigned int depth)
+node_ptr UVTree::Insert(const uv_point & uv, node_ptr & node)
 {
 	if(node == NULL)
 	{
-		node.reset(new kd_uv_node());
+		node.reset(new uv_node());
 		node->uv = uv;
 		return node;
 	}
 
-	bool go_left = less_than(uv, node, depth);
+	bool go_left = less_than(uv, node);
 
 	if(go_left)
-		return Insert(uv, node->left_child, depth+1);
+		return Insert(uv, node->left_child);
 	else
-		return Insert(uv, node->right_child, depth+1);
+		return Insert(uv, node->right_child);
 
 }
 
-bool UVKDTree::less_than(const uv_point & uv, const node_ptr & node, unsigned int depth)
+bool UVTree::less_than(const uv_point & uv, const node_ptr & node)
 {
-	int axis = depth % 2;
-	if(axis == 0)
-		return uv.first < node->uv.first;
-	else
-		return uv.second < node->uv.second;
-
-	return false;
+	return uv.first < node->uv.first;
 }
 
-unsigned int UVKDTree::size()
+unsigned int UVTree::size()
 {
 	return size(this->root);
 }
 
-unsigned int UVKDTree::size(const node_ptr & node)
+unsigned int UVTree::size(const node_ptr & node)
 {
 	// Count the current node.
 	int n_nodes = 1;
@@ -212,57 +209,48 @@ unsigned int UVKDTree::size(const node_ptr & node)
 	return n_nodes;
 }
 
-bool UVKDTree::uv_sort_u(const uv_point &a, const uv_point &b)
+bool UVTree::uv_sort_u(const uv_point &a, const uv_point &b)
 {
 	return a.first < b.first;
 }
 
-bool UVKDTree::uv_sort_v(const uv_point &a, const uv_point &b)
+node_ptr UVTree::uv_tree(vector<uv_point>::iterator start, vector<uv_point>::iterator end)
 {
-	return a.second < b.second;
-}
+	// Create a  new node
+	node_ptr node(0);
 
-node_ptr UVKDTree::uv_tree(vector<uv_point>::iterator start, vector<uv_point>::iterator end, unsigned int depth)
-{
-	// If there are no points, return an empty node pointer
+	// Determine how many elements we have
+	// If there are zero, we have a NULL node pointer.
 	unsigned int size = distance(start, end);
-	unsigned int median = size / 2;
-
-	// Sort by either u or v, depending on the depth:
-	int axis = depth % 2;
-	if(axis == 0)
+	if(size == 0)
+	{
+		// One element, it becomes this point.
+		node.reset(new uv_node());
+		node->uv = *(start);
+	}
+	else if(size == 1)
+	{
+		// One element, it becomes this point.
+		node.reset(new uv_node());
+		node->uv = *(start);
+	}
+	else if(size > 1)
+	{
 		sort(start, end, uv_sort_u);
-	else
-		sort(start, end, uv_sort_v);
 
-	// Pick the midpoint.
-	auto mid = start + median;
+		// Otherwise, we need to populate this point
+		node.reset(new uv_node());
 
-	// Create a new node, wrap in a shared_ptr
-	node_ptr node(new kd_uv_node());
-	node->uv = *(mid);
+		// find the midpoint
+		auto mid = start + size / 2;
+		node->uv = *(mid);
 
-	// Prune repeated elements from the left list
-	auto left = mid - 1;
-	while(left != start && compare_uv(*(left), *(mid)))
-	{
-		left--;
+		auto left = mid - 1;
+		auto right = mid + 1;
+
+		node->left_child = uv_tree(start, left);
+		node->right_child = uv_tree(right, end);
 	}
-
-	// If elements still remain, recurse:
-	if(left > (start - 1))
-		node->left_child = uv_tree(start, left, depth+1);
-
-	// Prune repeated elements from the right list
-	auto right = mid + 1;
-	while(right != end && compare_uv(*(right), *(mid)))
-	{
-		right++;
-	}
-
-	// If elements still remain, recurse:
-	if(right < (end + 1))
-		node->right_child = uv_tree(right, end, depth+1);
 
 	return node;
 }
