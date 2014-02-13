@@ -30,32 +30,6 @@ public:
 	COI_DATA_TABLE(ExtHDU & table);
 	virtual ~COI_DATA_TABLE();
 
-	template <typename T>
-	static void CheckErrorArray(const vector< valarray<T> > & data, vector< valarray<bool>> & flag, string data_identifer)
-	{
-		// Iterate over rows
-		for(int i = 0; i < data.size(); i++)
-		{
-			valarray<T> row = data[i];
-
-			for(int j = 0; j < row.size(); j++)
-			{
-				T value = row[j];
-				if(value != value)
-				{
-					cout << "Warning: Found " << data_identifer << " with a NAN value. This entry has automatically been flagged bad." << endl;
-					flag[i][j] = true;
-				}
-				else if(value < 0)
-				{
-					cout << "Warning: Found " << data_identifer << " < 0. This entry has automatically been flagged bad." << endl;
-					flag[i][j] = true;
-				}
-			}
-		}
-
-	}
-
 	string GetDateObs();
 	string GetArrayName();
 	string GetInstrumentName();

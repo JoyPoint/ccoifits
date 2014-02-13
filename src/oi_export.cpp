@@ -173,7 +173,7 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 
 	// Normally there are visibilities or V2s at locations where T3s (or T4s) exist, so we are
 	// going to try to exploit this property.
-	UVTree uv_tree;
+	UVKDTree uv_tree;
 	if(t_vis.size() > 0)
 		uv_tree.BuildTree(t_vis);
 	else if(t_vis2.size() > 0)
@@ -186,7 +186,6 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 	// We should now have a nearly balanced tree of UV points.  Now lets start exporting data.
 	// In the ideal case where every T3/V2 has a matching V2/Vis record, the tree should not
 	// change in size.
-//	cout << "\n -- Tree information -- " << endl;
 //	cout << "Tree Size " << uv_tree.size() << endl;
 //	cout << "Inserting OI_VIS records" << endl;
 //	Export_MinUV_Vis(uv_tree, t_vis, t_vis_ref, vis, vis_err);
@@ -223,7 +222,7 @@ void Export_MinUV(const OIDataList & data, vector<pair<double,double> > & uv_poi
 }
 
 /// A helper function for exporting data. Specialized for COIV2Row records
-void Export_MinUV_V2(UVTree & uv_tree, const OIDataList & data_list, vector<node_ptr> & uv_points, valarray<double> & data, valarray<double> & data_err)
+void Export_MinUV_V2(UVKDTree & uv_tree, const OIDataList & data_list, vector<node_ptr> & uv_points, valarray<double> & data, valarray<double> & data_err)
 {
 	OIDataRowPtr row;
 	COIV2Row * vis2_row;
@@ -270,7 +269,7 @@ void Export_MinUV_V2(UVTree & uv_tree, const OIDataList & data_list, vector<node
 }
 
 /// A helper function for exporting data. Specialized for COIT3DataRow records.
-void Export_MinUV_T3(UVTree & uv_tree, const OIDataList & data_list, vector<tuple<node_ptr, node_ptr, node_ptr> > & uv_refs,
+void Export_MinUV_T3(UVKDTree & uv_tree, const OIDataList & data_list, vector<tuple<node_ptr, node_ptr, node_ptr> > & uv_refs,
 		valarray<complex<double>> & data, valarray<pair<double,double>> & data_err,
 		vector<tuple<short, short, short>> & uv_sign)
 {

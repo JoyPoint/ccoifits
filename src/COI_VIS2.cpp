@@ -46,27 +46,13 @@ OIDataList COI_VIS2::read()
 	vector< valarray<double> > v2_data = ReadArray<double>("VIS2DATA");
 	vector< valarray<double> > v2_data_err = ReadArray<double>("VIS2ERR");
 
-	// Check the values for NAN or < 0 errors
-	CheckErrorArray(v2_data_err, flags, "vis2_err");
-
 	vector<double> ucoord = ReadColumn<double>("UCOORD");
 	vector<double> vcoord = ReadColumn<double>("VCOORD");
 
 	// Now create and store V2 objects:
 	vector<OIDataRowPtr> output;
 
-	// Array tables are optional so the keyword may not even exist in the OIFITS file:
-	OIArrayPtr array;
-	try
-	{
-		string array_name = this->GetArrayName();
-		array = mParent->GetArray(array_name);
-	}
-	catch(CCfits::HDU::NoSuchKeyword)
-	{
-		// do nothing
-	}
-
+	OIArrayPtr array = mParent->GetArray(this->GetArrayName());
 	OIWavelengthPtr wave = mParent->GetWavelength(this->GetInstrumentName());
 
 	for(int i = 0; i < n_rows; i++)

@@ -55,10 +55,6 @@ OIDataList COI_T3::read()
 	vector< valarray<double> > t3_amp_err = ReadArray<double>("T3AMPERR");
 	vector< valarray<double> > t3_phi_err = ReadArray<double>("T3PHIERR");
 
-	// Check the values for NAN or < 0 errors
-	CheckErrorArray(t3_amp_err, flags, "t3_amp_err");
-	CheckErrorArray(t3_phi_err, flags, "t3_phi_err");
-
 	// Copy the data into valarrays of complex doubles for storage in the COIT3Row class;
 	vector< valarray< complex<double> > > data;
 	vector< valarray< pair<double,double> > > data_err;
@@ -114,19 +110,7 @@ OIDataList COI_T3::read()
 	// Now create and store T3 objects:
 	vector<OIDataRowPtr> output;
 
-	// Array tables are optional, so the keyword might not even exist in the file.
-	OIArrayPtr array;
-	try
-	{
-		string array_name = this->GetArrayName();
-		array = mParent->GetArray(array_name);
-	}
-	catch(CCfits::HDU::NoSuchKeyword)
-	{
-
-	}
-
-
+	OIArrayPtr array = mParent->GetArray(this->GetArrayName());
 	OIWavelengthPtr wave = mParent->GetWavelength(this->GetInstrumentName());
 
 	for(int i = 0; i < n_rows; i++)
