@@ -3,10 +3,16 @@ project(libccoifits)
 
 # Compile with C++11 support.  Disable __STRICT_ANSI__ to support 
 # some nice OpenCL shortcuts (i.e. cl_float2's .s0, .s1 syntax).
-if("${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1}" MATCHES ".*clang")
-    ADD_DEFINITIONS("-stdlib=libc++")
-endif("${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1}" MATCHES ".*clang")
-ADD_DEFINITIONS("-std=c++0x")
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+elseif(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+else()
+        message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+endif()
 
 #set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_BUILD_TYPE DEBUG)
