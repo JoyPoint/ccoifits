@@ -120,7 +120,7 @@ public:
 		unsigned int temp = ComputeMasked(mask);
 
 		// Determine how many elements are active in the mask and create a storage array
-		unsigned int n_active = mask.size() - ComputeMasked(mask);
+		unsigned int n_active = mask.size() - temp;
 		T output(n_active);
 
 		// iterate over the elements, i, of data

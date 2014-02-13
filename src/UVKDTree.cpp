@@ -236,7 +236,7 @@ node_ptr UVKDTree::uv_tree(vector<uv_point>::iterator start, vector<uv_point>::i
 		sort(start, end, uv_sort_v);
 
 	// Pick the midpoint.
-	auto mid = start + int(size / 2);
+	auto mid = start + median;
 
 	// Create a new node, wrap in a shared_ptr
 	node_ptr node(new kd_uv_node());
