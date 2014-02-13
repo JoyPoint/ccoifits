@@ -68,6 +68,7 @@ public:
 	{
 		vector< valarray<T> > values;
 		int n_rows = mTable.rows();
+		
 		// First try to read in the column as an array
 		try
 		{

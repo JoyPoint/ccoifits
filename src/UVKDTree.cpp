@@ -225,7 +225,17 @@ node_ptr UVTree::uv_tree(vector<uv_point>::iterator start, vector<uv_point>::ite
 	// Create a  new node
 	node_ptr node(new uv_node());
 	unsigned int size = distance(start, end);
-	auto mid = start + size/2;
+	unsigned int median = size / 2;
+
+	// Sort by either u or v, depending on the depth:
+	int axis = depth / 2;
+	if(axis == 0)
+		sort(start, end, uv_sort_u);
+	else
+		sort(start, end, uv_sort_v);
+
+	// Pick the midpoint.
+	auto mid = start + median;
 
 	// assign the current UV point
 	node->uv = *(mid);
