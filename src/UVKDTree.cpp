@@ -52,8 +52,8 @@ void UVKDTree::BuildTree(const OIDataList & data)
 				// Get the scaled point.
 				auto uv = raw_uv->GetScaledPair(wavelength);
 
-				// Flip into the +u half-plane
-				if(uv.first < 0)
+				// Flip into the +v half-plane
+				if(uv.second < 0)
 				{
 					uv.first *= -1;
 					uv.second *= -1;
@@ -65,7 +65,7 @@ void UVKDTree::BuildTree(const OIDataList & data)
 	}
 
 	// Now build the tree
-	// NOTE: Because of how the building algorithim works, the start and
+	// NOTE: Because of how the building algorithm works, the start and
 	// end points must be the true starting and ending points of the vector.
 	// Normally end points to an element one beyond the end of the vector
 	// so we simply decrement end before passing it in.
@@ -101,8 +101,8 @@ node_ptr UVKDTree::FindUV(uv_point uv, bool insert_on_fail)
 /// If no node is found and insert_on_fail is true, a new node for uv will be created and returned.
 node_ptr UVKDTree::FindUV(uv_point uv, node_ptr & node, unsigned int depth, bool insert_on_fail)
 {
-	// We enforce that the tree has all positive uv.first values, conjugate if necessary.
-	if(uv.first < 0)
+	// We enforce that the tree has all positive uv.second values, conjugate if necessary.
+	if(uv.second < 0)
 	{
 		uv.first *= -1;
 		uv.second *= -1;
@@ -153,7 +153,7 @@ vector<pair<double, double>> UVKDTree::Flatten(node_ptr & node, vector<pair<doub
 node_ptr UVKDTree::Insert(uv_point & uv)
 {
 	// Flip into the +u half-plane
-	if(uv.first < 0)
+	if(uv.second < 0)
 	{
 		uv.first *= -1;
 		uv.second *= -1;

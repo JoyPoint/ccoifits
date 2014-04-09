@@ -311,9 +311,9 @@ void Export_MinUV_T3(UVKDTree & uv_tree, const OIDataList & data_list, vector<tu
 
 				scaled_uv = uv->GetScaledPair(wavelength);
 
-				// As the KD tree enforces U > 0, we can assign
+				// As the KD tree enforces V > 0, we can assign
 				// sign like this.
-				if(scaled_uv.first < 0)
+				if(scaled_uv.second < 0)
 				{
 					scaled_uv.first *= -1;
 					scaled_uv.second *= -1;
