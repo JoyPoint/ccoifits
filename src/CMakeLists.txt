@@ -23,6 +23,8 @@ list(REMOVE_ITEM CCOIFITS_SOURCE ${EXECUTABLE_SOURCE})
 
 add_library(ccoifits_static STATIC ${CCOIFITS_SOURCE} ${CCFITS_LIBRARIES})
 target_link_libraries(ccoifits_static ${CCFITS_LIBRARIES})
+set_target_properties(ccoifits_static PROPERTIES OUTPUT_NAME ccoifits)
+
 add_library(ccoifits SHARED ${CCOIFITS_SOURCE} ${CCFITS_LIBRARIES})
 target_link_libraries(ccoifits ${CCFITS_LIBRARIES})
 
@@ -37,3 +39,15 @@ install(FILES oi_file.hpp DESTINATION include)
 install(FILES oi_tools.hpp DESTINATION include)
 install(FILES oi_export.hpp DESTINATION include)
 install(FILES oi_filter.hpp DESTINATION include)
+
+# Automatic packaging
+SET(CPACK_GENERATOR "DEB")
+SET(CPACK_PACKAGE_NAME "ccoifits")
+SET(CPACK_PACKAGE_VERSION 1.0.0)
+SET(CPACK_PACKAGE_CONTACT "Brian Kloppenborg <bkloppenborg@gmail.com>")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++ OIFITS library (https://github.com/bkloppenborg/ccoifits)")
+
+# Debian-specific packaging options
+SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libcfitsio3 ( >= 3.340 ), libccfits0 ( >= 2.4)")
+ 
+INCLUDE(CPack)
