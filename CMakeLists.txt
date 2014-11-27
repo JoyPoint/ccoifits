@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8) 
 project(libccoifits)
 
+# get version information from git
+INCLUDE("${CMAKE_SOURCE_DIR}/CMakeModules/SetVersion.cmake")
+
 # Compile with C++11 support.  Disable __STRICT_ANSI__ to support 
 # some nice OpenCL shortcuts (i.e. cl_float2's .s0, .s1 syntax).
 include(CheckCXXCompilerFlag)
@@ -14,18 +17,10 @@ else()
         message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-#set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_BUILD_TYPE DEBUG)
-# Default debug level (mostly status messages, some copy-back numbers):
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-#set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wshadow -D DEBUG")
-# For even more verbose debugging output:
-#set(CMAKE_CXX_FLAGS_DEBUG "-g -D DEBUG -D DEBUG_VERBOSE")
+SET(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin")
+SET(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/lib")
 
-SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
-SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
-
-LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMakeModules)
+LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
 
 # Include and build Google Test framework:
 if(NOT TARGET gtest)
@@ -34,4 +29,31 @@ if(NOT TARGET gtest)
 endif(NOT TARGET gtest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
+# build subdirectories
 add_subdirectory(src)
+
+# Install stage
+INSTALL_FILES("${CMAKE_ROOT}/Modules" FILES "${CMAKE_SOURCE_DIR}/FindCCOIFITS.cmake")
+
+# Get the architecture
+EXECUTE_PROCESS(
+    COMMAND dpkg --print-architecture
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE OS_ARCHITECTURE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+# Automatic packaging
+SET(CPACK_GENERATOR "DEB")
+SET(CPACK_PACKAGE_NAME "ccoifits")
+SET(CPACK_PACKAGE_VERSION ${GIT_VERSION_TAG})
+SET(CPACK_PACKAGE_CONTACT "Brian Kloppenborg <bkloppenborg@gmail.com>")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++ OIFITS library (https://github.com/bkloppenborg/ccoifits)")
+
+# Debian-specific packaging options
+SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libcfitsio3 ( >= 3.340 ), libccfits0 ( >= 2.4)")
+SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE ${OS_ARCHITECTURE})
+SET(CPACK_DEBIAN_PACKAGE_SECTION "devel")
+
+# Run CPack
+INCLUDE(CPack)
