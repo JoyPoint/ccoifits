@@ -40,6 +40,26 @@ double AverageMJD(const OIDataList & data)
 	return -1;
 }
 
+double AverageWavelength(const OIDataList & data)
+{
+	long double wavelengthSum = 0;
+	long int wavelengthCount = 0;
+	for(auto row: data)
+	{
+		vector<double> wavelengths = row->GetMaskedWavelengths();
+		for(auto wavelength: wavelengths)
+			wavelengthSum += wavelength;
+
+		wavelengthCount += wavelengths.size();
+
+	}
+
+	if(wavelengthCount > 0)
+		return wavelengthSum / wavelengthCount;
+
+	return -1;
+}
+
 /// Creates a data set suitable for bootstrapping by randomly selecting Vis, V2, and T3 data
 /// from the original set.  The total number of each of Vis, V2, and T3 is conserved.
 /// As flags are modified, this function returns a copy of the underlying data structures.
