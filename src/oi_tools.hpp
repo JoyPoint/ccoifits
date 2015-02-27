@@ -28,6 +28,7 @@ typedef shared_ptr<COIDataRow> OIDataRowPtr;
 typedef vector<OIDataRowPtr> OIDataList;
 
 double AverageMJD(const OIDataList & data);
+double AverageWavelength(const OIDataList & data);
 
 OIDataList Bootstrap_Random(const OIDataList & data);
 void Bootstrap_Random_Helper(const OIDataList & input, OIDataList & output);
