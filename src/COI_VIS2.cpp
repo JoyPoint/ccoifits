@@ -61,6 +61,13 @@ OIDataList COI_VIS2::read()
 
 		OIUVPtr uv( new COIUV(ucoord[i], vcoord[i]));
 
+        // workaround to permit a negative error to set bad data flags
+        for(int j = 0; j < flags[i].size(); j++)
+        {
+            if(v2_data_err[i][j] < 0)
+                flags[i][j] = true;
+        }
+
 		OIDataRowPtr tmp( new COIV2Row(target, array, wave, times[i], MJDs[i], int_times[i], sta_indicies[i], flags[i], uv, v2_data[i], v2_data_err[i]) );
 		output.push_back(tmp);
 	}
