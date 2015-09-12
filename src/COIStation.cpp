@@ -10,13 +10,11 @@
 namespace ccoifits
 {
 
-COIStation::COIStation(string telescope_name, string station_name, int station_index, float diameter, valarray<double> xyz)
+COIStation::COIStation(const string & telescope_name, const string &  station_name,
+		int station_index, float diameter, const valarray<double> & xyz)
+: m_tel_name(telescope_name), m_sta_name(station_name),
+  m_sta_index(station_index), m_diameter(diameter), m_xyz(xyz)
 {
-	this->tel_name = telescope_name;
-	this->sta_name = station_name;
-	this->sta_index = station_index;
-	this->diameter = diameter;
-	this->xyz = xyz;
 }
 
 COIStation::~COIStation()

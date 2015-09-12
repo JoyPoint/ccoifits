@@ -106,7 +106,7 @@ OIDataList FilterByObservationMJD(const OIDataList & data, pair<double, double> 
 
 	for(OIDataRowPtr row: data)
 	{
-		if(InRange(row->mjd, mjd_range))
+		if(InRange(row->m_mjd, mjd_range))
 			output.push_back(row);
 	}
 

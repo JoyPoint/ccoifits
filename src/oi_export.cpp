@@ -83,7 +83,7 @@ void Export_Direct_V2(const OIDataList & data_list, vector<pair<double,double> >
 		// Generate and push_back scaled UV coordinates
 		for(auto wavelength : wavelengths)
 		{
-			for(auto uv : row->mUV)
+			for(auto uv : row->m_UV)
 				uv_points.push_back(uv->GetScaledPair(wavelength));
 		}
 
@@ -131,7 +131,7 @@ void Export_Direct_T3(const OIDataList & data_list, vector<pair<double,double> >
 		// Generate and push_back scaled UV coordinates
 		for(auto wavelength : wavelengths)
 		{
-			for(auto uv : row->mUV)
+			for(auto uv : row->m_UV)
 				uv_points.push_back(uv->GetScaledPair(wavelength));
 		}
 
@@ -249,7 +249,7 @@ void Export_MinUV_V2(UVKDTree & uv_tree, const OIDataList & data_list, vector<no
 		// Generate and push_back scaled UV coordinates
 		for(auto wavelength : wavelengths)
 		{
-			for(auto uv : row->mUV)
+			for(auto uv : row->m_UV)
 			{
 				uv_points.push_back( uv_tree.FindUV(uv->GetScaledPair(wavelength), true) );
 			}
@@ -306,7 +306,7 @@ void Export_MinUV_T3(UVKDTree & uv_tree, const OIDataList & data_list, vector<tu
 		{
 			for(int k = 0; k < 3; k++)
 			{
-				auto uv = row->mUV[k];
+				auto uv = row->m_UV[k];
 				sign[k] = 1;
 
 				scaled_uv = uv->GetScaledPair(wavelength);

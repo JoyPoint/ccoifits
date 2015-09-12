@@ -19,15 +19,16 @@ namespace ccoifits
 class COIWavelength
 {
 public:
-	string insname;
-	vector<double> eff_wave;
-	vector<double> eff_band;
+	string m_insname;
+	vector<double> m_eff_wave;
+	vector<double> m_eff_band;
 
 public:
-	COIWavelength(string insname, vector<double> eff_wave, vector<double> eff_band);
+	COIWavelength(const string & insname,
+			const vector<double> & eff_wave, const vector<double> & eff_band);
 	virtual ~COIWavelength();
 
-	string GetName() { return insname; };
+	string GetName() { return m_insname; };
 };
 
 } /* namespace ccoifits */

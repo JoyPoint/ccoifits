@@ -23,8 +23,7 @@ SET(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/lib")
 LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
 
 IF(CMAKE_COMPILER_IS_GNUCC)
-    ADD_DEFINITIONS(-Wall -Wextra)
-#    ADD_DEFINITIONS(-Wall -Wextra -Wshadow)
+    ADD_DEFINITIONS(-Wall -Wextra -Wshadow)
 ENDIF()
 
 # Include and build Google Test framework:

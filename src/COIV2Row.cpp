@@ -17,7 +17,7 @@ COIV2Row::COIV2Row(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelen
 	mType = DataTypes::OI_VIS2;
 	v2_data = data;
 	v2_data_err = data_err;
-	mUV.push_back(uv);
+	m_UV.push_back(uv);
 }
 
 COIV2Row::COIV2Row(COIV2Row * other)
@@ -26,7 +26,7 @@ COIV2Row::COIV2Row(COIV2Row * other)
 	mType = DataTypes::OI_VIS2;
 	v2_data = other->v2_data;
 	v2_data_err = other->v2_data_err;
-	mUV = other->mUV;
+	m_UV = other->m_UV;
 }
 
 COIV2Row::~COIV2Row()
@@ -36,12 +36,12 @@ COIV2Row::~COIV2Row()
 
 valarray<double> COIV2Row::GetMaskedData()
 {
-	return ApplyMask(flag, v2_data);
+	return ApplyMask(m_flag, v2_data);
 }
 
 valarray<double> COIV2Row::GetMaskedDataError()
 {
-	return ApplyMask(flag, v2_data_err);
+	return ApplyMask(m_flag, v2_data_err);
 }
 
 /// Returns the raw data stored in an COIV2Row without any application of a mask.

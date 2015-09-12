@@ -47,7 +47,7 @@ void UVKDTree::BuildTree(const OIDataList & data)
 		// Generate and push_back scaled UV coordinates
 		for(auto wavelength : wavelengths)
 		{
-			for(auto raw_uv : row->mUV)
+			for(auto raw_uv : row->m_UV)
 			{
 				// Get the scaled point.
 				auto uv = raw_uv->GetScaledPair(wavelength);

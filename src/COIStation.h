@@ -24,14 +24,15 @@ typedef shared_ptr<COIStation> StationPtr;
 class COIStation
 {
 public:
-	string tel_name;
-	string sta_name;
-	int sta_index;
-	float diameter;
-	valarray<double> xyz;
+	string m_tel_name;
+	string m_sta_name;
+	int m_sta_index;
+	float m_diameter;
+	valarray<double> m_xyz;
 
 public:
-	COIStation(string telescope_name, string station_name, int station_index, float diameter, valarray<double> xyz);
+	COIStation(const string & telescope_name, const string &  station_name,
+			int station_index, float diameter, const valarray<double> & xyz);
 	virtual ~COIStation();
 };
 

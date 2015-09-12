@@ -23,16 +23,17 @@ typedef shared_ptr<COIStation> OIStationPtr;
 class COIArray
 {
 public:
-	string array_name;
-	string frame;
-	vector<double> xyz;
-	vector<OIStationPtr> stations;
+	string m_array_name;
+	string m_frame;
+	vector<double> m_xyz;
+	vector<OIStationPtr> m_stations;
 
 public:
-	COIArray(const string & array_name, const string &  frame, const vector<double> & xyz, const vector<OIStationPtr> & stations);
+	COIArray(const string & array_name, const string &  frame,
+			const vector<double> & xyz, const vector<OIStationPtr> & stations);
 	virtual ~COIArray();
 
-	string GetName() { return array_name; };
+	string GetName() { return m_array_name; };
 };
 
 } /* namespace ccoifits */

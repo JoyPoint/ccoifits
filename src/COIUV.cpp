@@ -15,20 +15,20 @@ namespace ccoifits
 
 COIUV::COIUV()
 {
-	 this->u = 0;
-	 this->v = 0;
+	 this->m_u = 0;
+	 this->m_v = 0;
 }
 
 COIUV::COIUV(const COIUV & uv)
 {
-	this->u = uv.u;
-	this->v = uv.v;
+	this->m_u = uv.m_u;
+	this->m_v = uv.m_v;
 }
 
 COIUV::COIUV(double u, double v)
 {
-	 this->u = u;
-	 this->v = v;
+	 this->m_u = u;
+	 this->m_v = v;
 }
 
 COIUV::~COIUV()
@@ -38,12 +38,12 @@ COIUV::~COIUV()
 
 double COIUV::GetBaselineLength()
 {
-	return sqrt(u*u + v*v);
+	return sqrt(m_u*m_u + m_v*m_v);
 }
 
 pair<double,double> COIUV::GetScaledPair(double wavelength)
 {
-	return pair<double,double>(u/wavelength, v/wavelength);
+	return pair<double,double>(m_u/wavelength, m_v/wavelength);
 }
 
 

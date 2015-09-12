@@ -16,12 +16,16 @@ namespace ccoifits
 class COIVisRow: public COIDataRow
 {
 public:
-	valarray<complex<double>> vis_data;
-	valarray<pair<double,double> > vis_data_err;
+	valarray<complex<double>> m_vis_data;
+	valarray<pair<double,double> > m_vis_data_err;
 
 public:
-	COIVisRow(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength, double time, double mjd, double int_time, valarray<int> sta_index,
-			valarray<bool> flag, OIUVPtr uv, valarray<complex<double>> vis_data, valarray<pair<double,double> > vis_data_err);
+	COIVisRow(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength,
+			double time, double mjd, double int_time,
+			const valarray<int> & sta_index,
+			const valarray<bool> & flag, OIUVPtr uv,
+			const valarray<complex<double>> & vis_data,
+			const valarray<pair<double,double> > & vis_data_err);
 
 	COIVisRow(COIVisRow * other);
 

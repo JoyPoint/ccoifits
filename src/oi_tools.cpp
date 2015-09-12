@@ -32,7 +32,7 @@ double AverageMJD(const OIDataList & data)
 
 	long double ave_mjd = 0;
 	for(auto row: data)
-		ave_mjd += row->mjd;
+		ave_mjd += row->m_mjd;
 
 	if(data.size() > 0)
 		return ave_mjd / data.size();
@@ -224,7 +224,7 @@ OIDataList Recalibrate(const OIDataList & data, OICalibratorPtr old_cal, OICalib
 void Recalibrate(COIV2Row * v2_row, OICalibratorPtr old_cal, OICalibratorPtr new_cal)
 {
 	// Get the UV point and wavelength information:
-	OIUVPtr uv = v2_row->mUV[0];
+	OIUVPtr uv = v2_row->m_UV[0];
 	vector<double> wavelength = v2_row->GetRawWavelengths();
 	int n_wave = wavelength.size();
 
@@ -237,15 +237,15 @@ void Recalibrate(COIV2Row * v2_row, OICalibratorPtr old_cal, OICalibratorPtr new
 void Recalibrate(COIT3Row * t3_row, OICalibratorPtr old_cal, OICalibratorPtr new_cal)
 {
 	// Get the UV point and wavelength information:
-	OIUVPtr uv_12 = t3_row->mUV[0];
-	OIUVPtr uv_23 = t3_row->mUV[1];
-	OIUVPtr uv_31 = t3_row->mUV[2];
+	OIUVPtr uv_12 = t3_row->m_UV[0];
+	OIUVPtr uv_23 = t3_row->m_UV[1];
+	OIUVPtr uv_31 = t3_row->m_UV[2];
 	vector<double> wavelength = t3_row->GetRawWavelengths();
 	int n_wave = wavelength.size();
 
 	// Recalibrate using the ratio of the calibrators old/new:
 	for(int i = 0; i < n_wave; i++)
-		t3_row->t3_data[i] *= old_cal->GetT3(uv_12, uv_23, uv_31, wavelength[i]) / new_cal->GetT3(uv_12, uv_23, uv_31, wavelength[i]);
+		t3_row->m_t3_data[i] *= old_cal->GetT3(uv_12, uv_23, uv_31, wavelength[i]) / new_cal->GetT3(uv_12, uv_23, uv_31, wavelength[i]);
 }
 
 } /* namespace ccoifits */

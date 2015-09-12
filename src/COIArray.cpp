@@ -13,11 +13,11 @@ namespace ccoifits
 
 COIArray::	COIArray(const string & array_name, const string &  frame,
 		const vector<double> & xyz, const vector<OIStationPtr> & stations)
+	: m_array_name(array_name),
+	  m_frame(frame),
+	  m_xyz(xyz),
+	  m_stations(stations)
 {
-	this->array_name = array_name;
-	this->frame = frame;
-	this->xyz = xyz;
-	this->stations = stations;
 }
 
 COIArray::~COIArray()

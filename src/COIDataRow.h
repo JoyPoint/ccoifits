@@ -70,18 +70,20 @@ protected:
 	OIWavelengthPtr mWave;
 
 public:
-	double time;
-	double mjd;
-	double int_time;
+	double m_time;
+	double m_mjd;
+	double m_int_time;
 
-	vector<OIUVPtr> mUV;
-	valarray<int> sta_index;
-	valarray<bool> flag;
+	vector<OIUVPtr> m_UV;
+	valarray<int> m_sta_index;
+	valarray<bool> m_flag;
 
 public:
 
-	COIDataRow(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength, double time, double mjd, double int_time, valarray<int> sta_index,
-			valarray<bool> flag);
+	COIDataRow(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength,
+			double time, double mjd, double int_time,
+			const valarray<int> & sta_index,
+			const valarray<bool> & flag);
 
 	COIDataRow(const COIDataRow * other);
 

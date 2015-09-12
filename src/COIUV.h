@@ -22,8 +22,8 @@ typedef shared_ptr<COIUV> OIUVPtr;
 class COIUV
 {
 public:
-	double u;
-	double v;
+	double m_u;
+	double m_v;
 
 public:
 	COIUV();
@@ -38,18 +38,18 @@ public:
 
 	COIUV operator +(const COIUV & rhs)
 	{
-		return COIUV(this->u + rhs.u, this->v + rhs.v);
+		return COIUV(this->m_u + rhs.m_u, this->m_v + rhs.m_v);
 	}
 
 	COIUV operator -(const COIUV & rhs)
 	{
-		return COIUV(this->u - rhs.u, this->v - rhs.v);
+		return COIUV(this->m_u - rhs.m_u, this->m_v - rhs.m_v);
 	}
 
 //	bool operator ==(const COIUV & rhs)
 //	{
-//		double du = this->u - rhs.u;
-//		double dv = this->v - rhs.v;
+//		double du = this->m_u - rhs.u;
+//		double dv = this->m_v - rhs.v;
 //
 //		if(sqrt(du*du + dv*dv) < UV_THRESHOLD)
 //			return true;
@@ -60,8 +60,8 @@ public:
 	template <typename T>
 	bool operator *(T val)
 	{
-		this->u * val;
-		this->v * val;
+		this->m_u * val;
+		this->m_v * val;
 
 		return true;
 	}

@@ -10,11 +10,12 @@
 namespace ccoifits
 {
 
-COIWavelength::COIWavelength(string insname, vector<double> eff_wave, vector<double> eff_band)
+COIWavelength::COIWavelength(const string & insname,
+		const vector<double> & eff_wave, const vector<double> & eff_band)
+	: m_insname(insname),
+	  m_eff_wave(eff_wave),
+	  m_eff_band(eff_band)
 {
-	this->insname = insname;
-	this->eff_wave = eff_wave;
-	this->eff_band = eff_band;
 }
 
 COIWavelength::~COIWavelength()

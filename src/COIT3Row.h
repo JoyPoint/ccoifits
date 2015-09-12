@@ -19,13 +19,17 @@ namespace ccoifits
 class COIT3Row: public COIDataRow
 {
 public:
-	valarray< complex<double> > t3_data;
-	valarray< pair<double,double> > t3_data_err;
+	valarray< complex<double> > m_t3_data;
+	valarray< pair<double,double> > m_t3_data_err;
 
 public:
-	COIT3Row(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength, double time, double mjd, double int_time, valarray<int> sta_index,
-			valarray<bool> flag,
-			OIUVPtr uv12, OIUVPtr uv23, valarray<complex<double>> t3_data, valarray<pair<double,double>> t3_data_err);
+	COIT3Row(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength,
+			double time, double mjd, double int_time,
+			const valarray<int> & sta_index,
+			const valarray<bool> & flag,
+			OIUVPtr uv12, OIUVPtr uv23,
+			const valarray<complex<double>> & t3_data,
+			const valarray<pair<double,double>> & t3_data_err);
 
 	COIT3Row(COIT3Row * other);
 	virtual ~COIT3Row();

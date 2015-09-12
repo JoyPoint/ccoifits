@@ -20,17 +20,14 @@ using namespace std;
 namespace ccoifits
 {
 
-COIDataRow::COIDataRow(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength, double time, double mjd, double int_time, valarray<int> sta_index,
-		valarray<bool> flag)
+COIDataRow::COIDataRow(OITargetPtr target, OIArrayPtr array, OIWavelengthPtr wavelength,
+		double time, double mjd, double int_time,
+		const valarray<int> & sta_index,
+		const valarray<bool> & flag)
+	: mTarget(target), mArray(array), mWave(wavelength), m_time(time), m_mjd(mjd),
+	m_int_time(int_time), m_sta_index(sta_index), m_flag(flag)
 {
-	mTarget = target;
-	mArray = array;
-	mWave = wavelength;
-	this->time = time;
-	this->mjd = mjd;
-	this->int_time = int_time;
-	this->sta_index = sta_index;
-	this->flag = flag;
+
 }
 
 COIDataRow::COIDataRow(const COIDataRow * other)
@@ -38,11 +35,11 @@ COIDataRow::COIDataRow(const COIDataRow * other)
 	mTarget = other->mTarget;
 	mArray = other->mArray;
 	mWave = other->mWave;
-	this->time = other->time;
-	this->mjd = other->mjd;
-	this->int_time = other->int_time;
-	this->sta_index = other->sta_index;
-	this->flag = other->flag;
+	this->m_time = other->m_time;
+	this->m_mjd = other->m_mjd;
+	this->m_int_time = other->m_int_time;
+	this->m_sta_index = other->m_sta_index;
+	this->m_flag = other->m_flag;
 }
 
 COIDataRow::~COIDataRow()
@@ -94,13 +91,13 @@ string COIDataRow::GetCombinerName()
 /// Returns the total number of data points that are not masked by flags.
 unsigned int COIDataRow::GetMaskedNData()
 {
-	return GetRawNData() - ComputeMasked(flag);
+	return GetRawNData() - ComputeMasked(m_flag);
 }
 
 vector<double> COIDataRow::GetMaskedWavelengths()
 {
 	if(mWave.get() != NULL)
-		return ApplyMask(flag, mWave->eff_wave);
+		return ApplyMask(m_flag, mWave->m_eff_wave);
 
 	vector<double> tmp;
 	return tmp;
@@ -109,7 +106,7 @@ vector<double> COIDataRow::GetMaskedWavelengths()
 vector<double> COIDataRow::GetMaskedBandwidths()
 {
 	if(mWave.get() != NULL)
-		return ApplyMask(flag, mWave->eff_band);
+		return ApplyMask(m_flag, mWave->m_eff_band);
 
 	vector<double> tmp;
 	return tmp;
@@ -119,7 +116,7 @@ vector<double> COIDataRow::GetMaskedBandwidths()
 /// of any flags. Answer is always = N(spectral channels)
 unsigned int COIDataRow::GetRawNData()
 {
-	return flag.size();
+	return m_flag.size();
 }
 
 /// Returns the effective wavelengths of the data associated with this object. If there is no
@@ -127,7 +124,7 @@ unsigned int COIDataRow::GetRawNData()
 vector<double> COIDataRow::GetRawWavelengths()
 {
 	if(mWave.get() != NULL)
-		return mWave->eff_wave;
+		return mWave->m_eff_wave;
 
 	vector<double> tmp;
 	return tmp;
@@ -138,7 +135,7 @@ vector<double> COIDataRow::GetRawWavelengths()
 vector<double> COIDataRow::GetRawBandwidths()
 {
 	if(mWave.get() != NULL)
-		return mWave->eff_band;
+		return mWave->m_eff_band;
 
 	vector<double> tmp;
 	return tmp;
@@ -164,7 +161,7 @@ void COIDataRow::RandomMask(unsigned int n_to_flag)
 	// TODO: Enable when clang fully supports C++11
 	//unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine generator (seed);
-	std::uniform_int_distribution<int> flag_dist(0, flag.size() - 1);
+	std::uniform_int_distribution<int> flag_dist(0, m_flag.size() - 1);
 	unsigned int entry = 0;
 
 	// flag n_to_flag data points at random.
@@ -173,9 +170,9 @@ void COIDataRow::RandomMask(unsigned int n_to_flag)
 		// Pick a flag at random
 		entry = flag_dist(generator);
 
-		if(!flag[entry])
+		if(!m_flag[entry])
 		{
-			flag[entry] = true;
+			m_flag[entry] = true;
 			n_to_flag--;
 		}
 	}
