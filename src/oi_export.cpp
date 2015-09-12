@@ -112,8 +112,8 @@ void Export_Direct_T3(const OIDataList & data_list, vector<pair<double,double> >
 	// Allocate room in the data arrays:
 	int n_rows = data_list.size();
 	int n_data = 0;
-	for(auto row : data_list)
-		n_data += row->GetMaskedNData();
+	for(auto t_row : data_list)
+		n_data += t_row->GetMaskedNData();
 
 	data.resize(n_data);
 	data_err.resize(n_data);
@@ -285,8 +285,8 @@ void Export_MinUV_T3(UVKDTree & uv_tree, const OIDataList & data_list, vector<tu
 	// Allocate room in the data arrays:
 	int n_rows = data_list.size();
 	int n_data = 0;
-	for(auto row : data_list)
-		n_data += row->GetMaskedNData();
+	for(auto t_row : data_list)
+		n_data += t_row->GetMaskedNData();
 
 	data.resize(n_data);
 	data_err.resize(n_data);
