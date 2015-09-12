@@ -359,7 +359,7 @@ void Export_ToText(const OIDataList & data, string base_filename)
 
 	// Get the data in minimum UV point format:
 	Export_MinUV(data, uv_points, vis, vis_err, vis_uv_ref, vis2, vis2_err, vis2_uv_ref, t3, t3_err, t3_uv_ref, t3_uv_sign);
-	Export_ToText(base_filename, uv_points, vis, vis_err, vis_uv_ref, vis2, vis2_err, vis2_uv_ref, t3, t3_err, t3_uv_ref, t3_uv_sign);
+	Export_ToText(base_filename, uv_points, vis, vis_err, vis_uv_ref, vis2, vis2_err, vis2_uv_ref, t3, t3_err, t3_uv_ref);
 }
 
 /// Exports the specified data to a series of text files whose names begin with base_filename.
@@ -378,8 +378,7 @@ void Export_ToText(string base_filename,
 	vector<unsigned int> vis2_uv_ref,
 	valarray<complex<double>> t3,
 	valarray<pair<double,double> > t3_err,
-	vector<tuple<unsigned int, unsigned int, unsigned int>> t3_uv_ref,
-	vector<tuple<short, short, short>> t3_uv_sign)
+	vector<tuple<unsigned int, unsigned int, unsigned int>> t3_uv_ref)
 {
 
 	int n_uv = 0;

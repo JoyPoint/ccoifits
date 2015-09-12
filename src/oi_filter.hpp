@@ -51,7 +51,7 @@ void FilterByDataType(const OIDataList & data, OIDataList & vis_rows, OIDataList
 OIDataList FilterByObjectCoords(const OIDataList & data, double ra, double dec, double search_radius);
 OIDataList FilterByObjectName(const OIDataList & data, string object_name);
 OIDataList FilterByObservationMJD(const OIDataList & data, pair<double, double> mjd_range);
-OIDataList FilterByWavelength(const OIDataList & data, pair<double,double> wavelength_range);
+//OIDataList FilterByWavelength(const OIDataList & data, pair<double,double> wavelength_range);
 
 
 //OIDataList FilterByBaseline(OIDataList data, vector<OIBaseline> baselines);

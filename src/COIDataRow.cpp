@@ -53,9 +53,9 @@ COIDataRow::~COIDataRow()
 unsigned int COIDataRow::ComputeMasked(const valarray<bool> & flags)
 {
 	unsigned int flag_sum = 0;
-	for(int i = 0; i < flags.size(); i++)
+	for(auto flag: flags)
 	{
-		if(flags[i]) flag_sum += 1;
+		if(flag) flag_sum += 1;
 	}
 
 	return flag_sum;

@@ -113,26 +113,4 @@ OIDataList FilterByObservationMJD(const OIDataList & data, pair<double, double> 
 	return output;
 }
 
-/// Returns a vector of OIDataPtrs which contain data from within the specified wavelength range.
-/// Wavelength filtering is accomplished by modifying the underlying data flags, therefore this
-/// function performs deep copies of the data structures when needed.
-OIDataList FilterByWavelength(const OIDataList & data, pair<double,double> wavelength_range)
-{
-	// This function applies filtering to the data itself, therefore it
-	//
-	// 1) Copies the underlying COIDataRow object
-	// 2) Manipulates the COIDataRow::flag member
-	// 3) Creates a new OIDataPtr object and appends it to the output vector
-	// 4) Returns the vector.
-
-	OIDataList output;
-
-	for(OIDataRowPtr row: data)
-	{
-
-	}
-
-	return output;
-}
-
 } /* namespace ccoifits */

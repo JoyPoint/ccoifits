@@ -69,8 +69,7 @@ void Export_ToText(string base_filename,
 		valarray<complex<double>> vis, valarray<pair<double,double>> vis_err, vector<unsigned int> vis_uv_ref,
 		valarray<double> vis2, valarray<double> vis2_err, vector<unsigned int> vis2_uv_ref,
 		valarray<complex<double>> t3, valarray<pair<double,double> > t3_err,
-		vector<tuple<unsigned int, unsigned int, unsigned int>> t3_uv_ref,
-		vector<tuple<short, short, short>> t3_uv_sign);
+		vector<tuple<unsigned int, unsigned int, unsigned int>> t3_uv_ref);
 
 } /* namespace ccoifits */
 #endif /* OIEXPORT_H_ */

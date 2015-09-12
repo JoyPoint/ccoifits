@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 2.8) 
+cmake_minimum_required(VERSION 2.8)
 project(libccoifits)
 
 # get version information from git
 INCLUDE("${CMAKE_SOURCE_DIR}/CMakeModules/SetVersion.cmake")
 
-# Compile with C++11 support.  Disable __STRICT_ANSI__ to support 
+# Compile with C++11 support.  Disable __STRICT_ANSI__ to support
 # some nice OpenCL shortcuts (i.e. cl_float2's .s0, .s1 syntax).
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
@@ -21,6 +21,11 @@ SET(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin")
 SET(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/lib")
 
 LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
+
+IF(CMAKE_COMPILER_IS_GNUCC)
+    ADD_DEFINITIONS(-Wall -Wextra)
+#    ADD_DEFINITIONS(-Wall -Wextra -Wshadow)
+ENDIF()
 
 # Include and build Google Test framework:
 if(NOT TARGET gtest)

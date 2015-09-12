@@ -115,16 +115,18 @@ public:
 	T ApplyMask(valarray<bool> & mask, T data)
 	{
 		// Mask and data must have the same size.
-		assert(mask.size() == data.size());
+		size_t mask_size = mask.size();
+		assert(mask_size == data.size());
 
 		unsigned int temp = ComputeMasked(mask);
 
 		// Determine how many elements are active in the mask and create a storage array
-		unsigned int n_active = mask.size() - temp;
+		unsigned int n_active = mask_size - temp;
 		T output(n_active);
 
 		// iterate over the elements, i, of data
-		for(int i = 0, j = 0; i < mask.size(); i++)
+
+		for(size_t i = 0, j = 0; i < mask_size; i++)
 		{
 			// If the data is not masked, put it into the j-th slot of the output array
 			if(!mask[i])

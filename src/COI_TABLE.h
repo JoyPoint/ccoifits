@@ -67,7 +67,7 @@ public:
 	vector< valarray<T> > ReadArray(string column)
 	{
 		vector< valarray<T> > values;
-		int n_rows = mTable.rows();
+		size_t n_rows = mTable.rows();
 		
 		// First try to read in the column as an array
 		try
@@ -82,7 +82,7 @@ public:
 
 			// Now convert it to a 2D column with one entry in each row
 			values.resize(temp_column.size());
-			for(int i = 0; i < temp_column.size(); i++)
+			for(size_t i = 0; i < n_rows; i++)
 			{
 				values[i].resize(1);
 				values[i][0] = temp_column[i];

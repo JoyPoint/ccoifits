@@ -29,7 +29,7 @@ public:
 	vector<OIStationPtr> stations;
 
 public:
-	COIArray(string array_name, string frame, vector<double> xyz, vector<OIStationPtr> stations);
+	COIArray(const string & array_name, const string &  frame, const vector<double> & xyz, const vector<OIStationPtr> & stations);
 	virtual ~COIArray();
 
 	string GetName() { return array_name; };

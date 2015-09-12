@@ -62,6 +62,8 @@ public:
 	{
 		this->u * val;
 		this->v * val;
+
+		return true;
 	}
 };
 

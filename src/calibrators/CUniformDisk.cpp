@@ -43,8 +43,8 @@ double CUniformDisk::GetV2(OIUVPtr uv, double wavelength)
 complex<double> CUniformDisk::GetT3(OIUVPtr uv_12, OIUVPtr uv_23, OIUVPtr uv_31, double wavelength)
 {
 	complex<double> vis_12 = GetVis(uv_12, wavelength);
-	complex<double> vis_23 = GetVis(uv_12, wavelength);
-	complex<double> vis_31 = GetVis(uv_12, wavelength);
+	complex<double> vis_23 = GetVis(uv_23, wavelength);
+	complex<double> vis_31 = GetVis(uv_31, wavelength);
 
 	return vis_12 * vis_23 * vis_31;
 }
