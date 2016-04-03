@@ -43,7 +43,7 @@ typedef vector<OIDataRowPtr> OIDataList;
 class COIFile
 {
 protected:
-	auto_ptr<FITS> mOIFITS;
+	unique_ptr<FITS> mOIFITS;
 
 	map<int, OITargetPtr> mTargets;
 	map<string, OIArrayPtr> mArrays;	// maps mArray['name'] -> OIArrayPtr
